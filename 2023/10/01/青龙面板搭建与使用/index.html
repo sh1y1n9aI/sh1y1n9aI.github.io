@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="环境 CentOS docker  项目地址：https:&#x2F;&#x2F;github.com&#x2F;whyour&#x2F;qinglong 安装1234567891011121314docker run -dit \  -p 5700:5700 \  --name qinglong \  --hostname qinglong \  --restart always \  -v &#x2F;root&#x2F;ql&#x2F;data:&#x2F;ql&#x2F;dat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="青龙面板搭建与使用">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="环境 CentOS docker  项目地址：https:&#x2F;&#x2F;github.com&#x2F;whyour&#x2F;qinglong 安装1234567891011121314docker run -dit \  -p 5700:5700 \  --name qinglong \  --hostname qinglong \  --restart always \  -v &#x2F;root&#x2F;ql&#x2F;data:&#x2F;ql&#x2F;dat">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001003233854.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001003255957.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001003320433.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001003351970.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001003418277.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004015992.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004031233.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004053425.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004111259.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004129272.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001003807402.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001003938215.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004357052.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004229682.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004244541.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001004322243.png">
+<meta property="article:published_time" content="2023-09-30T16:26:00.000Z">
+<meta property="article:modified_time" content="2023-09-30T16:46:39.728Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="薅羊毛">
+<meta property="article:tag" content="定时任务">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="自动化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20231001003233854.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>青龙面板搭建与使用</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/09/24/badusb%E5%88%B6%E4%BD%9C/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&text=青龙面板搭建与使用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&is_video=false&description=青龙面板搭建与使用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=青龙面板搭建与使用&body=Check out this article: https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&name=青龙面板搭建与使用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&t=青龙面板搭建与使用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E9%9B%86%E9%94%A6"><span class="toc-number">4.</span> <span class="toc-text">问题集锦</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        青龙面板搭建与使用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-09-30T16:26:00.000Z" class="dt-published" itemprop="datePublished">2023-10-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E4%B9%B1%E5%85%AB%E4%B8%83%E7%B3%9F/">乱八七糟</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/docker/" rel="tag">docker</a>, <a class="p-category" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a>, <a class="p-category" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">自动化</a>, <a class="p-category" href="/tags/%E8%96%85%E7%BE%8A%E6%AF%9B/" rel="tag">薅羊毛</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><ul>
+<li>CentOS</li>
+<li>docker</li>
+</ul>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/whyour/qinglong">https://github.com/whyour/qinglong</a></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">docker run -dit \</span><br><span class="line">  -p 5700:5700 \</span><br><span class="line">  --name qinglong \</span><br><span class="line">  --hostname qinglong \</span><br><span class="line">  --restart always \</span><br><span class="line">  -v /root/ql/data:/ql/data \</span><br><span class="line">  -v /root/ql/config:/ql/config \</span><br><span class="line">  -v /root/ql/log:/ql/log \</span><br><span class="line">  -v /root/ql/db:/ql/db \</span><br><span class="line">  -v /root/ql/scripts:/ql/scripts \</span><br><span class="line">  -v /root/ql/jbot:/ql/jbot \</span><br><span class="line">  -v /root/ql/repo:/ql/repo \</span><br><span class="line">  -v /root/ql/deps:/ql/deps \</span><br><span class="line">  whyour/qinglong:latest</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20231001003233854.png" alt="image-20231001003233854"></p>
+<p>查看容器</p>
+<p><img src="/../images/image-20231001003255957.png" alt="image-20231001003255957"></p>
+<p>访问：IP:5700</p>
+<p><img src="/../images/image-20231001003320433.png" alt="image-20231001003320433"></p>
+<p>安装依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 进入青龙的交互式shell</span><br><span class="line">docker exec -it qinglong bash</span><br><span class="line"># 添加依赖（较慢）</span><br><span class="line">curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/bean661/utils/main/QLOneKeyDependency.sh | sh</span><br><span class="line"></span><br><span class="line"># 如果依赖安装报错，终止命令，重新安装依赖即可</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20231001003351970.png" alt="image-20231001003351970"></p>
+<p>重启容器</p>
+<p><img src="/../images/image-20231001003418277.png" alt="image-20231001003418277"></p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>登录青龙面板</p>
+<p><img src="/../images/image-20231001004015992.png" alt="image-20231001004015992"></p>
+<p>配置拉库</p>
+<p><img src="/../images/image-20231001004031233.png" alt="image-20231001004031233"></p>
+<p>运行，下载脚本文件</p>
+<p><img src="/../images/image-20231001004053425.png" alt="image-20231001004053425"></p>
+<p>等待一段时间，下载成功</p>
+<p><img src="/../images/image-20231001004111259.png" alt="image-20231001004111259"></p>
+<p>在环境变量选项，添加京东的cookie</p>
+<p><img src="/../images/image-20231001004129272.png" alt="image-20231001004129272"></p>
+<p>登录京东手机网页版：<a target="_blank" rel="noopener" href="https://m.jd.com/">https://m.jd.com</a>，找到cookie</p>
+<p><img src="/../images/image-20231001003807402.png" alt="image-20231001003807402"></p>
+<p>添加Cookie到环境变量</p>
+<p><img src="/../images/image-20231001003938215.png" alt="image-20231001003938215"></p>
+<p>定时任务处，随便找一个任务，运行并查看日志，出现如下结果，证明配置正确</p>
+<p><img src="/../images/image-20231001004357052.png" alt="image-20231001004357052"></p>
+<h3 id="问题集锦"><a href="#问题集锦" class="headerlink" title="问题集锦"></a>问题集锦</h3><ol>
+<li>如果某些任务有特殊的模块需要安装，在日志中复制模块的名称，然后在依赖管理中添加即可</li>
+</ol>
+<p><img src="/../images/image-20231001004229682.png" alt="image-20231001004229682"></p>
+<p>安装依赖</p>
+<p><img src="/../images/image-20231001004244541.png" alt="image-20231001004244541"></p>
+<ol start="2">
+<li>配置代理、支持拉取的脚本扩展</li>
+</ol>
+<p><img src="/../images/image-20231001004322243.png" alt="image-20231001004322243"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E9%9B%86%E9%94%A6"><span class="toc-number">4.</span> <span class="toc-text">问题集锦</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&text=青龙面板搭建与使用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&is_video=false&description=青龙面板搭建与使用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=青龙面板搭建与使用&body=Check out this article: https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&title=青龙面板搭建与使用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&name=青龙面板搭建与使用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/&t=青龙面板搭建与使用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

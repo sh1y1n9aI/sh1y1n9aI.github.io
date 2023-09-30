@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="单字符匹配匹配某个字符串：match()只能够匹配一个对象 12345678910# 格式：match(表达式, 匹配对象)# 返回结果是object,使用group方法打印输出text &#x3D; &amp;#x27;python&amp;#x27;result1 &#x3D; re.match(&amp;#x27;py&amp;#x27;, text)result2 &#x3D; re.match(&amp;#x27;pt&amp;#x27;, text)result">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅学正则">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="单字符匹配匹配某个字符串：match()只能够匹配一个对象 12345678910# 格式：match(表达式, 匹配对象)# 返回结果是object,使用group方法打印输出text &#x3D; &amp;#x27;python&amp;#x27;result1 &#x3D; re.match(&amp;#x27;py&amp;#x27;, text)result2 &#x3D; re.match(&amp;#x27;pt&amp;#x27;, text)result">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20230829172013461.png">
+<meta property="article:published_time" content="2021-01-26T08:40:47.000Z">
+<meta property="article:modified_time" content="2023-09-30T16:31:25.801Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="正则">
+<meta property="article:tag" content="内容匹配">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20230829172013461.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>浅学正则</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2021/12/24/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&text=浅学正则"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&is_video=false&description=浅学正则"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅学正则&body=Check out this article: https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&name=浅学正则&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&t=浅学正则"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%AD%97%E7%AC%A6%E5%8C%B9%E9%85%8D"><span class="toc-number">1.</span> <span class="toc-text">单字符匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E5%AD%97%E7%AC%A6%E5%8C%B9%E9%85%8D"><span class="toc-number">2.</span> <span class="toc-text">多字符匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">匹配规则的替代方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%8C%B9%E9%85%8D"><span class="toc-number">4.</span> <span class="toc-text">特殊匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%8C%B9%E9%85%8D%E8%BF%9B%E9%98%B6"><span class="toc-number">5.</span> <span class="toc-text">特殊匹配进阶</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%AA%E5%A9%AA%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%9D%9E%E8%B4%AA%E5%A9%AA%E6%A8%A1%E5%BC%8F"><span class="toc-number">6.</span> <span class="toc-text">贪婪模式与非贪婪模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#group%E5%87%BD%E6%95%B0"><span class="toc-number">7.</span> <span class="toc-text">group函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">8.</span> <span class="toc-text">正则表达式的常用函数</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        浅学正则
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-01-26T08:40:47.000Z" class="dt-published" itemprop="datePublished">2021-01-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E4%B9%B1%E5%85%AB%E4%B8%83%E7%B3%9F/">乱八七糟</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%86%85%E5%AE%B9%E5%8C%B9%E9%85%8D/" rel="tag">内容匹配</a>, <a class="p-category" href="/tags/%E6%AD%A3%E5%88%99/" rel="tag">正则</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h3 id="单字符匹配"><a href="#单字符匹配" class="headerlink" title="单字符匹配"></a>单字符匹配</h3><p>匹配某个字符串：match()只能够匹配一个对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 格式：match(表达式, 匹配对象)</span></span><br><span class="line"><span class="comment"># 返回结果是object,使用group方法打印输出</span></span><br><span class="line">text = <span class="string">&#x27;python&#x27;</span></span><br><span class="line">result1 = re.<span class="keyword">match</span>(<span class="string">&#x27;py&#x27;</span>, text)</span><br><span class="line">result2 = re.<span class="keyword">match</span>(<span class="string">&#x27;pt&#x27;</span>, text)</span><br><span class="line">result3 = re.<span class="keyword">match</span>(<span class="string">&#x27;yt&#x27;</span>, text)</span><br><span class="line"><span class="built_in">print</span>(result1.group())</span><br><span class="line"><span class="built_in">print</span>(result2.group())  <span class="comment"># 匹配不到，会返回None</span></span><br><span class="line"><span class="built_in">print</span>(result3.group())  <span class="comment"># 匹配不到，会返回None，match函数从起始位置开始匹配</span></span><br><span class="line"><span class="comment"># 如果有多个匹配，group(n)可以指定匹配第几个 </span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>点(.)：匹配任意的某个字符(<code>无法匹配换行符</code>)</p>
+</li>
+<li><p>\d：匹配任意的某个数字(<code>数字以外的内容均不匹配</code>)</p>
+</li>
+<li><p>\D：除数字以外均可匹配(<code>\D和\d互补</code>)</p>
+</li>
+<li><p>\s：匹配空白字符(<code>\n、\t、\r、空格都表示空白字符</code>)</p>
+</li>
+<li><p>\w：匹配小写的a-z，大写的A-Z，数字和下划线</p>
+</li>
+<li><p>\W：匹配除小写\w之外的所有字符(<code>\w和\W互补</code>)</p>
+</li>
+<li><p>[]：组合的方式，只要在中括号内的内容均可匹配(<code>多个匹配内容是，取&quot;或&quot;，只要匹配对象中含有一个内容就匹配</code>)</p>
+</li>
+</ol>
+<h3 id="多字符匹配"><a href="#多字符匹配" class="headerlink" title="多字符匹配"></a>多字符匹配</h3><ol>
+<li>星号(*)：匹配零个或多个字符</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">text1 = <span class="string">&#x27;123456789&#x27;</span></span><br><span class="line">result1 = re.<span class="keyword">match</span>(<span class="string">&#x27;[\d]*&#x27;</span>, text)  </span><br><span class="line"><span class="comment"># 不加*号，只匹配“1”；加上后，能全部匹配</span></span><br><span class="line"><span class="comment"># 指得是：匹配[\d]零次或多次</span></span><br><span class="line"><span class="built_in">print</span>(result1.group())  <span class="comment"># 输出：123456789</span></span><br><span class="line"></span><br><span class="line">text2 = <span class="string">&#x27;123-456-789&#x27;</span></span><br><span class="line">result2 = re.<span class="keyword">match</span>(<span class="string">&#x27;[\d]*&#x27;</span>, text)  </span><br><span class="line"><span class="built_in">print</span>(result2.group())  <span class="comment"># 只匹配到：123</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>加号(+)：匹配一个或多个字符(<code>至少有一个</code>)</p>
+</li>
+<li><p>问号(?)：匹配零个或一个字符</p>
+</li>
+<li><p>{m}：匹配指定个数m个</p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&#x27;12345-6789&#x27;</span></span><br><span class="line">result = re.<span class="keyword">match</span>(<span class="string">&#x27;[\d]&#123;3&#125;&#125;&#x27;</span>, text)  </span><br><span class="line"><span class="built_in">print</span>(result.group())  <span class="comment"># 匹配到：123</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>{m,n}：匹配m到n个字符(<code>默认匹配最多次（n次）</code>)</li>
+</ol>
+<hr>
+<h3 id="匹配规则的替代方案"><a href="#匹配规则的替代方案" class="headerlink" title="匹配规则的替代方案"></a>匹配规则的替代方案</h3><ol>
+<li><p>\d —&gt; [0-9]</p>
+</li>
+<li><p>\D —&gt; [^0-9] <code>中括号里面加^表示取反，在外面表示其后跟着的字符作为开头</code></p>
+</li>
+<li><p>\w —&gt; [0-9a-zA-Z_]</p>
+</li>
+<li><p>\W —&gt; [^0-9a-zA-Z_]</p>
+</li>
+<li><p>[\d\D]、[\w\W] —&gt; 匹配所有的字符</p>
+</li>
+</ol>
+<hr>
+<h3 id="特殊匹配"><a href="#特殊匹配" class="headerlink" title="特殊匹配"></a>特殊匹配</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result1 = re.<span class="keyword">match</span>(<span class="string">&#x27;[.]+&#x27;</span>, text)  <span class="comment"># 仅仅匹配字符&quot;.&quot;，没有其他含义，也可以加转义来匹配：&quot;\.&quot;</span></span><br><span class="line">result2 = re.<span class="keyword">match</span>(<span class="string">&#x27;.+&#x27;</span>, text)   <span class="comment"># 匹配所有字符一次或多次</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>匹配手机号码</p>
+<ul>
+<li>re.match(‘1[3-9][0-9]{9}’, text) <code>第一位固定为1；第二位范围：3-9；第三位范围：0-9，匹配九次</code></li>
+</ul>
+</li>
+<li><p>验证邮箱</p>
+<ul>
+<li>re.match(‘[0-9a-zA-Z]]+@[0-9a-z]+[.]com’, text)</li>
+</ul>
+</li>
+<li><p>验证身份证号</p>
+<ul>
+<li>re.match(‘[0-9]{17}[0-9xX]’, text)  <code>最后一位有可能是大小写的字母x或者数字</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="特殊匹配进阶"><a href="#特殊匹配进阶" class="headerlink" title="特殊匹配进阶"></a>特殊匹配进阶</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">text1 = <span class="string">&#x27;pythonpy&#x27;</span></span><br><span class="line">result1 = re.search(<span class="string">&#x27;py&#x27;</span>, text)  </span><br><span class="line"><span class="built_in">print</span>(result1.group())  <span class="comment"># 输出：py</span></span><br><span class="line"><span class="comment"># 全局匹配，只匹配一次</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>^：表示以其后的字符开头，不在中括号内</p>
+</li>
+<li><p>$：表示以其后的字符结尾</p>
+</li>
+<li><p>|：匹配多个表达式或者字符串</p>
+<ul>
+<li>第一种</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;https://www.baidu.com&quot;</span></span><br><span class="line">result = re.search(<span class="string">&#x27;[http|https|ftp|file]+&#x27;</span>, text)</span><br><span class="line"><span class="built_in">print</span>(result.group())  <span class="comment"># 输出：https</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第二种</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;https://www.baidu.com&quot;</span></span><br><span class="line">result = re.search(<span class="string">&#x27;(http|https|ftp|file)&#x27;</span>, text)</span><br><span class="line"><span class="built_in">print</span>(result.group())  <span class="comment"># 输出：http，因为只要匹配到就算；可以理解成有优先级的概念，所以先匹配到了http</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="贪婪模式与非贪婪模式"><a href="#贪婪模式与非贪婪模式" class="headerlink" title="贪婪模式与非贪婪模式"></a>贪婪模式与非贪婪模式</h3><p><strong>默认：贪婪模式</strong></p>
+<ul>
+<li>贪婪模式：尽可能多的去匹配内容</li>
+<li>非贪婪模式：尽可能少的去匹配内容<code>添加&quot;?&quot;</code></li>
+</ul>
+<hr>
+<h3 id="group函数"><a href="#group函数" class="headerlink" title="group函数"></a>group函数</h3><p><strong>前面的内容都是在做”匹配”，并未执行”提取”</strong></p>
+<p>&#x3D;&#x3D;可以在group(n)中指定序号，表明提取指定的内容（以空格定位：”\s”）&#x3D;&#x3D;</p>
+<hr>
+<h3 id="正则表达式的常用函数"><a href="#正则表达式的常用函数" class="headerlink" title="正则表达式的常用函数"></a>正则表达式的常用函数</h3><ul>
+<li><p>re.match()：从左往右进行匹配  <code>开头不满足即失败</code></p>
+</li>
+<li><p>re.search()：在整个字符串中查找，返回第一个被找到的字符串  <code>只返回第一个</code></p>
+</li>
+<li><p>re.findall()：在整个字符串中查找所有满足条件的字符串  <code>返回结果为列表，输出不需要group函数，可以直接print</code></p>
+</li>
+<li><p>re.sub()：替换字符串<code>匹配出来的字符串进行替换</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.sub(<span class="string">&#x27;\s(\w+@[0-9a-z]+\.com)&#x27;</span>, <span class="string">&#x27;wrong&#x27;</span>, text)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>re.split()：主要用来分隔字符串<code>返回一个列表</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&#x27;I am xxxxx&#x27;</span></span><br><span class="line">re.split(<span class="string">&#x27; &#x27;</span>, text)   <span class="comment"># 匹配字符串以空格分隔</span></span><br><span class="line">re.split(<span class="string">&#x27;[^\w]&#x27;</span>, text)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>re.compile()：对正则表达式进行编译<code>好处：可以添加注释，防止自己忘了正则的含义</code> <br></p>
+</li>
+</ul>
+<p><img src="/../images/image-20230829172013461.png" alt="image-20230829172013461"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">r&#x27;&lt;a target=&quot;blank&quot; href= &quot;pos ition_detail.php?id=33824&amp;amp; keywords=python&amp;amp;tid=87&amp;amp; id=2218&quot;&gt;python开发工程师&lt;/a&gt;&#x27;</span></span><br><span class="line">resu1t = re.findall(<span class="string">&#x27;&lt;a.*?href=&quot;(.*?)&quot;.*?&lt;/a&gt;&#x27;</span>, text, re.DOTALL)</span><br><span class="line"><span class="comment"># 前后的&quot;.*?&quot;表示匹配内容，而括号中的表示提取内容</span></span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%AD%97%E7%AC%A6%E5%8C%B9%E9%85%8D"><span class="toc-number">1.</span> <span class="toc-text">单字符匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E5%AD%97%E7%AC%A6%E5%8C%B9%E9%85%8D"><span class="toc-number">2.</span> <span class="toc-text">多字符匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99%E7%9A%84%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">匹配规则的替代方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%8C%B9%E9%85%8D"><span class="toc-number">4.</span> <span class="toc-text">特殊匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%8C%B9%E9%85%8D%E8%BF%9B%E9%98%B6"><span class="toc-number">5.</span> <span class="toc-text">特殊匹配进阶</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%AA%E5%A9%AA%E6%A8%A1%E5%BC%8F%E4%B8%8E%E9%9D%9E%E8%B4%AA%E5%A9%AA%E6%A8%A1%E5%BC%8F"><span class="toc-number">6.</span> <span class="toc-text">贪婪模式与非贪婪模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#group%E5%87%BD%E6%95%B0"><span class="toc-number">7.</span> <span class="toc-text">group函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">8.</span> <span class="toc-text">正则表达式的常用函数</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&text=浅学正则"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&is_video=false&description=浅学正则"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浅学正则&body=Check out this article: https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&title=浅学正则"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&name=浅学正则&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2021/01/26/%E6%B5%85%E5%AD%A6%E6%AD%A3%E5%88%99/&t=浅学正则"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
