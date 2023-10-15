@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="mysql_manager.php上传脚本到服务器即可 123456789101112131415161718192021222324252627282930313233343536373839404142434445&lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt;     &lt;title&gt;执行MySQL语句&lt;&#x2F;title&gt; &amp;l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于PHP简易版MySQL可视化脚本">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="mysql_manager.php上传脚本到服务器即可 123456789101112131415161718192021222324252627282930313233343536373839404142434445&lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt;     &lt;title&gt;执行MySQL语句&lt;&#x2F;title&gt; &amp;l">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231016005053345.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231016005127255.png">
+<meta property="article:published_time" content="2023-09-26T16:48:32.000Z">
+<meta property="article:modified_time" content="2023-10-15T16:53:43.821Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20231016005053345.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>基于PHP简易版MySQL可视化脚本</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/09/28/%E9%9D%92%E9%BE%99%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/09/15/openVPN%E7%AE%80%E5%8D%95%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&text=基于PHP简易版MySQL可视化脚本"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&is_video=false&description=基于PHP简易版MySQL可视化脚本"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于PHP简易版MySQL可视化脚本&body=Check out this article: https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&name=基于PHP简易版MySQL可视化脚本&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&t=基于PHP简易版MySQL可视化脚本"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-manager-php"><span class="toc-number">1.</span> <span class="toc-text">mysql_manager.php</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        基于PHP简易版MySQL可视化脚本
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-09-26T16:48:32.000Z" class="dt-published" itemprop="datePublished">2023-09-27</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/PHP%E8%84%9A%E6%9C%AC/">PHP脚本</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/MySQL/" rel="tag">MySQL</a>, <a class="p-category" href="/tags/PHP/" rel="tag">PHP</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h3 id="mysql-manager-php"><a href="#mysql-manager-php" class="headerlink" title="mysql_manager.php"></a>mysql_manager.php</h3><p>上传脚本到服务器即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line"> &lt;html&gt;</span><br><span class="line"> &lt;head&gt;</span><br><span class="line">     &lt;title&gt;执行MySQL语句&lt;/title&gt;</span><br><span class="line"> &lt;/head&gt;</span><br><span class="line"> &lt;body&gt;</span><br><span class="line">     &lt;h1&gt;执行MySQL语句&lt;/h1&gt;</span><br><span class="line">     &lt;form method=&quot;POST&quot; action=&quot;&quot;&gt;</span><br><span class="line">         &lt;textarea name=&quot;sql_statement&quot; rows=&quot;5&quot; cols=&quot;50&quot; placeholder=&quot;请输入MySQL语句&quot;&gt;&lt;/textarea&gt;</span><br><span class="line">         &lt;br&gt;</span><br><span class="line">         &lt;input type=&quot;submit&quot; value=&quot;执行&quot;&gt;</span><br><span class="line">     &lt;/form&gt;</span><br><span class="line">     &lt;?php</span><br><span class="line">     // 检查是否提交了表单</span><br><span class="line">     if ($_SERVER[&#x27;REQUEST_METHOD&#x27;] === &#x27;POST&#x27;) &#123;</span><br><span class="line">         // 获取用户输入的MySQL语句</span><br><span class="line">         $sql_statement = $_POST[&#x27;sql_statement&#x27;];</span><br><span class="line">         // 连接MySQL数据库</span><br><span class="line">         $host = &#x27;localhost&#x27;;</span><br><span class="line">         $username = &#x27;root&#x27;;</span><br><span class="line">         $password = &#x27;123456&#x27;;</span><br><span class="line">         $database = &#x27;mysql&#x27;;</span><br><span class="line">         $connection = mysqli_connect($host, $username, $password, $database);</span><br><span class="line">         // 执行MySQL查询</span><br><span class="line">         $result = mysqli_query($connection, $sql_statement);</span><br><span class="line">         // 检查查询结果</span><br><span class="line">         if ($result) &#123;</span><br><span class="line">             // 回显查询结果</span><br><span class="line">             echo &#x27;&lt;h2&gt;查询结果：&lt;/h2&gt;&#x27;;</span><br><span class="line">             while ($row = mysqli_fetch_assoc($result)) &#123;</span><br><span class="line">                 echo &#x27;&lt;pre&gt;&#x27;;</span><br><span class="line">                 print_r($row);</span><br><span class="line">                 echo &#x27;&lt;/pre&gt;&#x27;;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125; else &#123;</span><br><span class="line">             // 显示错误消息</span><br><span class="line">             echo &#x27;&lt;h2&gt;错误：&lt;/h2&gt;&#x27;;</span><br><span class="line">             echo &#x27;&lt;p&gt;&#x27; . mysqli_error($connection) . &#x27;&lt;/p&gt;&#x27;;</span><br><span class="line">         &#125;</span><br><span class="line">         // 关闭数据库连接</span><br><span class="line">         mysqli_close($connection);</span><br><span class="line">     &#125;</span><br><span class="line">     ?&gt;</span><br><span class="line"> &lt;/body&gt;</span><br><span class="line"> &lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>使用时，修改如下参数</p>
+<p><img src="/../images/image-20231016005053345.png" alt="image-20231016005053345"></p>
+<p>使用案例</p>
+<p><img src="/../images/image-20231016005127255.png" alt="image-20231016005127255"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-manager-php"><span class="toc-number">1.</span> <span class="toc-text">mysql_manager.php</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&text=基于PHP简易版MySQL可视化脚本"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&is_video=false&description=基于PHP简易版MySQL可视化脚本"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于PHP简易版MySQL可视化脚本&body=Check out this article: https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&title=基于PHP简易版MySQL可视化脚本"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&name=基于PHP简易版MySQL可视化脚本&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/09/27/%E5%9F%BA%E4%BA%8EPHP%E7%AE%80%E6%98%93%E7%89%88MySQL%E5%8F%AF%E8%A7%86%E5%8C%96%E8%84%9A%E6%9C%AC/&t=基于PHP简易版MySQL可视化脚本"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
