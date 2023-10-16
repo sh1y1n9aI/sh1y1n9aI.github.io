@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="钓鱼思路整理 一、目标信息收集 二、目标环境 三、社交 四、基础设施 五、邮件 六、钓鱼话术模板 一、目标信息收集 业务范围   金融 医疗 卫生 IT   组织架构   董事会 高管 财务 采购 运维   人员信息   针对不同职位采用不同话术 按照，部门、职务、难易程度分类，分批次投递 姓名、职位、邮箱、手机   目标服务入口   VPN、webVPN 邮服 SSO认证 OA认证 其他内网入口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="钓鱼话术案例">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="钓鱼思路整理 一、目标信息收集 二、目标环境 三、社交 四、基础设施 五、邮件 六、钓鱼话术模板 一、目标信息收集 业务范围   金融 医疗 卫生 IT   组织架构   董事会 高管 财务 采购 运维   人员信息   针对不同职位采用不同话术 按照，部门、职务、难易程度分类，分批次投递 姓名、职位、邮箱、手机   目标服务入口   VPN、webVPN 邮服 SSO认证 OA认证 其他内网入口">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231017021052317.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231017021109216.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20231017021122995.png">
+<meta property="article:published_time" content="2023-05-25T18:07:51.000Z">
+<meta property="article:modified_time" content="2023-10-16T18:17:43.928Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="社会工程学">
+<meta property="article:tag" content="钓鱼邮件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20231017021052317.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>钓鱼话术案例</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/08/30/%E5%88%A9%E7%94%A8mimikatz%E4%BD%BF%E7%94%A8NTLM%E5%87%AD%E8%AF%81%E7%99%BB%E5%BD%95RDP/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2022/11/05/%E5%9F%BA%E4%BA%8Epython%E5%AE%9E%E7%8E%B0%E7%AE%80%E6%98%93%E7%9A%84%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&text=钓鱼话术案例"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&is_video=false&description=钓鱼话术案例"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=钓鱼话术案例&body=Check out this article: https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&name=钓鱼话术案例&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&t=钓鱼话术案例"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%9B%AE%E6%A0%87%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">一、目标信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%9B%AE%E6%A0%87%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">二、目标环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%A4%BE%E4%BA%A4"><span class="toc-number">3.</span> <span class="toc-text">三、社交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="toc-number">4.</span> <span class="toc-text">四、基础设施</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%82%AE%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">五、邮件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%92%93%E9%B1%BC%E8%AF%9D%E6%9C%AF%E6%A8%A1%E6%9D%BF"><span class="toc-number">6.</span> <span class="toc-text">六、钓鱼话术模板</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%80%EF%BC%9A%E4%BA%B2%E7%88%B1%E7%9A%84%E5%90%8C%E4%BA%8B%E4%BB%AC"><span class="toc-number">6.0.1.</span> <span class="toc-text">案例一：亲爱的同事们</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%8C%EF%BC%9A%E5%85%B3%E4%BA%8E2021%E5%B9%B4%E5%BA%A6%E7%BB%A9%E6%95%88%E7%BB%93%E7%AE%97%E4%B8%AA%E4%BA%BA%E6%89%80%E5%BE%97%E7%A8%8E%E7%A8%8E%E6%94%B6%E4%BC%98%E5%8C%96%E7%9A%84%E6%83%85%E5%86%B5%E9%80%9A%E6%8A%A5"><span class="toc-number">6.0.2.</span> <span class="toc-text">案例二：关于2021年度绩效结算个人所得税税收优化的情况通报</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%89%EF%BC%9A%E9%92%93%E9%B1%BC%E6%A1%88%E4%BE%8B%EF%BC%9AChrome%E6%BC%8F%E6%B4%9E%E4%B8%80%E9%94%AE%E4%BF%AE%E5%A4%8D"><span class="toc-number">6.0.3.</span> <span class="toc-text">案例三：钓鱼案例：Chrome漏洞一键修复</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%9B%9B%EF%BC%9A%E4%BB%A5%E5%81%87%E4%B9%B1%E7%9C%9F"><span class="toc-number">6.0.4.</span> <span class="toc-text">案例四：以假乱真</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%94%EF%BC%9A%E9%A3%9F%E5%A0%82%E6%BB%A1%E6%84%8F%E5%BA%A6%E8%B0%83%E6%9F%A5"><span class="toc-number">6.0.5.</span> <span class="toc-text">案例五：食堂满意度调查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%85%AD%EF%BC%9A%E7%BB%A9%E6%95%88%E8%87%AA%E8%AF%84"><span class="toc-number">6.0.6.</span> <span class="toc-text">案例六：绩效自评</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%83%EF%BC%9A%E5%B7%A5%E8%A3%85%E5%B0%BA%E5%AF%B8%E6%89%8B%E6%9C%BA"><span class="toc-number">6.0.7.</span> <span class="toc-text">案例七：工装尺寸手机</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%85%AB%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E6%8F%90%E7%A4%BA%E5%92%8C%E5%8A%9E%E5%85%AC%E7%94%B5%E8%84%91%E5%8A%A0%E5%9B%BA%E6%89%8B%E5%86%8C"><span class="toc-number">6.0.8.</span> <span class="toc-text">案例八：网络安全风险提示和办公电脑加固手册</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B9%9D%EF%BC%9A%E7%A4%BE%E4%BF%9D%E7%BC%B4%E7%BA%B3%E5%BC%82%E5%B8%B8%E9%80%9A%E7%9F%A5%E4%B9%A6"><span class="toc-number">6.0.9.</span> <span class="toc-text">案例九：社保缴纳异常通知书</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%8D%81%EF%BC%9A%E5%85%B3%E4%BA%8E%E6%8A%A4%E7%BD%91%E8%A1%8C%E5%8A%A82022%E5%AE%89%E5%85%A8%E8%A1%A5%E4%B8%81%E6%9B%B4%E6%96%B0%E9%80%9A%E7%9F%A5"><span class="toc-number">6.0.10.</span> <span class="toc-text">案例十：关于护网行动2022安全补丁更新通知</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%8D%81%E4%B8%80%EF%BC%9AVPN%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E9%87%8D%E8%A3%85"><span class="toc-number">6.0.11.</span> <span class="toc-text">案例十一：VPN证书过期重装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%8D%81%E4%BA%8C%EF%BC%9A%E5%AE%89%E8%A3%85%E7%9B%91%E6%8E%A7%E8%BD%AF%E4%BB%B6"><span class="toc-number">6.0.12.</span> <span class="toc-text">案例十二：安装监控软件</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        钓鱼话术案例
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-05-25T18:07:51.000Z" class="dt-published" itemprop="datePublished">2023-05-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E9%92%93%E9%B1%BC/">钓鱼</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E7%A4%BE%E4%BC%9A%E5%B7%A5%E7%A8%8B%E5%AD%A6/" rel="tag">社会工程学</a>, <a class="p-category" href="/tags/%E9%92%93%E9%B1%BC%E9%82%AE%E4%BB%B6/" rel="tag">钓鱼邮件</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><strong>钓鱼思路整理</strong></p>
+<p>一、目标信息收集</p>
+<p>二、目标环境</p>
+<p>三、社交</p>
+<p>四、基础设施</p>
+<p>五、邮件</p>
+<p>六、钓鱼话术模板</p>
+<h3 id="一、目标信息收集"><a href="#一、目标信息收集" class="headerlink" title="一、目标信息收集"></a>一、目标信息收集</h3><ul>
+<li><p>业务范围</p>
+</li>
+<li><ul>
+<li>金融</li>
+<li>医疗</li>
+<li>卫生</li>
+<li>IT</li>
+</ul>
+</li>
+<li><p>组织架构</p>
+</li>
+<li><ul>
+<li>董事会</li>
+<li>高管</li>
+<li>财务</li>
+<li>采购</li>
+<li>运维</li>
+</ul>
+</li>
+<li><p>人员信息</p>
+</li>
+<li><ul>
+<li>针对不同职位采用不同话术</li>
+<li>按照，部门、职务、难易程度分类，分批次投递</li>
+<li>姓名、职位、邮箱、手机</li>
+</ul>
+</li>
+<li><p>目标服务入口</p>
+</li>
+<li><ul>
+<li>VPN、webVPN</li>
+<li>邮服</li>
+<li>SSO认证</li>
+<li>OA认证</li>
+<li>其他内网入口</li>
+<li>帮助文档、使用手册文档信息泄露，收集弱口令</li>
+</ul>
+</li>
+<li><p>站内联系方式</p>
+</li>
+<li><ul>
+<li>新闻投稿、投诉举报、站内信、业务反馈</li>
+</ul>
+</li>
+<li><p>目标新闻</p>
+</li>
+<li><ul>
+<li>了解企业文化、工作动态、便于构造高质量文案，提高效率</li>
+</ul>
+</li>
+<li><p>**库</p>
+</li>
+<li><ul>
+<li>根据收集到的信息进行猎魔查询</li>
+</ul>
+</li>
+</ul>
+<h3 id="二、目标环境"><a href="#二、目标环境" class="headerlink" title="二、目标环境"></a>二、目标环境</h3><ul>
+<li><p>地区用户环境</p>
+</li>
+<li><ul>
+<li>语言、常用邮箱、常用搜索引擎、常用运营商</li>
+</ul>
+</li>
+<li><p>时间、工作时间</p>
+</li>
+<li><ul>
+<li>了解日常工作时间，节假日，尽可能工作日发信</li>
+</ul>
+</li>
+</ul>
+<h3 id="三、社交"><a href="#三、社交" class="headerlink" title="三、社交"></a>三、社交</h3><ul>
+<li>大陆：微信、脉脉、领英、qq、钉钉</li>
+<li>海外：领英、Facebook、Twitter、Line、ins、YouTube、TG</li>
+<li>工作软件进行钓简历</li>
+</ul>
+<h3 id="四、基础设施"><a href="#四、基础设施" class="headerlink" title="四、基础设施"></a>四、基础设施</h3><ul>
+<li>目标地区匿名手机号</li>
+<li>目标地区常用邮箱</li>
+<li>目标近似域名</li>
+</ul>
+<h3 id="五、邮件"><a href="#五、邮件" class="headerlink" title="五、邮件"></a>五、邮件</h3><ul>
+<li><p>话术</p>
+</li>
+<li><ul>
+<li>落款信息、开头语、结束语、标题、发信人名称&#x2F;部门名称</li>
+</ul>
+</li>
+<li><p>邮件格式</p>
+</li>
+<li><ul>
+<li>仿正规邮件，无明显钓鱼邮件格式，邮件添加logo增加可信度</li>
+</ul>
+</li>
+<li><p>发信IP或服务</p>
+</li>
+<li><ul>
+<li>优先选择第三方邮件服务，正规无拉黑</li>
+</ul>
+</li>
+<li><p>发信频率</p>
+</li>
+<li><ul>
+<li>多批次，少投递，高精准</li>
+</ul>
+</li>
+</ul>
+<h3 id="六、钓鱼话术模板"><a href="#六、钓鱼话术模板" class="headerlink" title="六、钓鱼话术模板"></a>六、钓鱼话术模板</h3><h5 id="案例一：亲爱的同事们"><a href="#案例一：亲爱的同事们" class="headerlink" title="案例一：亲爱的同事们"></a>案例一：亲爱的同事们</h5><p>近期，公司监控系统捕捉到某些VPN账号存在数次异常操作行为，根据我司(集团)网络安全规定，为确保账号安全，现需要所有具有VPN登录权限的同事配合(无VPN登录权限的同事可直接忽略此邮件)，尽快重新登录VPN系统以完成VPN账号安全检查，登录VPN系统自动检查账号安全性，检查过程将全程自动进行，无需人工干预，具体操作如下图所示，注:逾期未进行安全自检的VPN账号将全部被收回或锁定，系统邮件，请勿回复</p>
+<h5 id="案例二：关于2021年度绩效结算个人所得税税收优化的情况通报"><a href="#案例二：关于2021年度绩效结算个人所得税税收优化的情况通报" class="headerlink" title="案例二：关于2021年度绩效结算个人所得税税收优化的情况通报"></a>案例二：关于2021年度绩效结算个人所得税税收优化的情况通报</h5><p>关于2021年度绩效结算个人所得税税收优化的情况通报各单位：</p>
+<p>根据《关于延续实施全年一次性奖金等个人所得税优惠政策的公告》（财政部税务总局2021年第42号公告），全年一次性奖金单独计税优惠政策，执行期限延长至2023年12月31日。</p>
+<p>为确保广大职工充分享受该项税收优惠政策，2021年底计财处对每一名职工的全年工薪收入和各类扣除情况进行了分析测算，按政策将大部分职工年底发放的部分绩效结算金额按全年一次性奖金优化计税。优化后，有78.2%的职工可节约税金。在2022年2月底申报期完成全年一次性奖金纳税申报后，计财处会按程序将节约的税金发至职工银行卡上。</p>
+<p>需要说明：经过对职工全年应缴税额和已扣税额对比，有部分职工需要补税（名单见附件），补税的金额将在后续发放的绩效中扣除。产生补税的原因主要是部分职工在2021年12月通过个人所得税APP修改了专项附加扣除，由于操作不当，导致全年专项附加扣除额度减少，从而应缴税额增加。建议这部分职工在使用个人所得税年度APP进行汇算清缴时，将专项附加扣除修改正确，可申请退回这部分税金。</p>
+<p><strong>附件名称：2021年度本单位职工个税补缴名单.rar</strong></p>
+<h5 id="案例三：钓鱼案例：Chrome漏洞一键修复"><a href="#案例三：钓鱼案例：Chrome漏洞一键修复" class="headerlink" title="案例三：钓鱼案例：Chrome漏洞一键修复"></a>案例三：钓鱼案例：Chrome漏洞一键修复</h5><p>补丁欺骗、利用Tools欺骗、通知欺骗。等思路结合，自行脑补</p>
+<p>  <img src="/../images/image-20231017021052317.png" alt="image-20231017021052317"></p>
+<h5 id="案例四：以假乱真"><a href="#案例四：以假乱真" class="headerlink" title="案例四：以假乱真"></a>案例四：以假乱真</h5><p><img src="/../images/image-20231017021109216.png" alt="image-20231017021109216"></p>
+<ul>
+<li>邮箱账户备案登记</li>
+</ul>
+<p><img src="/../images/image-20231017021122995.png" alt="image-20231017021122995"></p>
+<h5 id="案例五：食堂满意度调查"><a href="#案例五：食堂满意度调查" class="headerlink" title="案例五：食堂满意度调查"></a>案例五：食堂满意度调查</h5><p>各位员⼯: 为了完善公司⻝堂管理，持续提⾼服务质量，让员⼯更加精神饱满的⼯作，希望⼤家从公司及⾃身实际 出发，积极配合、认真、详实的填写⻝堂满意度调查。谢谢配合！链接如下</p>
+<h5 id="案例六：绩效自评"><a href="#案例六：绩效自评" class="headerlink" title="案例六：绩效自评"></a>案例六：绩效自评</h5><p>各位同事好： 近期经过管理层商议决定，我们公司将于x⽉x⽇实施2021新⼀轮薪资架构，为了更好的保障员⼯的权利，需要您配合填写员⼯绩效⾃我考核，并于x⽉x⽇内填写回复完成，员⼯个⼈⼯作绩效评价表格将作为晋升、加薪等调整的依据之⼀。请对您在2021财年所承担的⼯作任务及个⼈⼯作成果进⾏客观、具体、如实地评价。 并在2021年x⽉x⽇23点前，以邮件形式回复 附件： 绩效⾃评.zip</p>
+<h5 id="案例七：工装尺寸手机"><a href="#案例七：工装尺寸手机" class="headerlink" title="案例七：工装尺寸手机"></a>案例七：工装尺寸手机</h5><p>各位同事： 为了塑造公司员⼯良好形象，体现员⼯饱满的精神⾯貌，现就公司着装做出要求，要求上下班必须着⼯装。 公司正在为各部⻔员⼯配置⼯装，现需收集您⾐服尺⼨⼤⼩，链接如下： <a target="_blank" rel="noopener" href="http://xxxx.xxx,要求必须5月xx日前填写,过期不候.谢谢配合!/">http://xxxx.xxx，要求必须5⽉xx⽇前填写，过期不候。谢谢配合！</a></p>
+<h5 id="案例八：网络安全风险提示和办公电脑加固手册"><a href="#案例八：网络安全风险提示和办公电脑加固手册" class="headerlink" title="案例八：网络安全风险提示和办公电脑加固手册"></a>案例八：网络安全风险提示和办公电脑加固手册</h5><p>各位领导、同事： ⼤家好！据⽹络安全监测⼩组提示，近期检测到多名员⼯协同办公系统发⽣异地异常登录情况，分 析原因可能为协同办公系统账号采⽤了简单密码。为杜绝此类事件的再次发⽣，请各部⻔组织员⼯ 修改使⽤复杂密码，并学习《办公环境信息安全加固⼿册》。 密码修改策略要求： （1）密码的⻓度⾄少为12个字符，需采⽤⼤⼩写、特殊字符、数字的组合⽅式。 （2）密码不得使⽤⽣⽇、姓名拼⾳等个⼈信息。 有问题及时沟通，谢谢。 附件《办公环境信息安全加固⼿册》，解 压：XXXX xxx 2021年11⽉X⽇</p>
+<h5 id="案例九：社保缴纳异常通知书"><a href="#案例九：社保缴纳异常通知书" class="headerlink" title="案例九：社保缴纳异常通知书"></a>案例九：社保缴纳异常通知书</h5><p>公司在为您购买社保时因您个⼈原因社保在册导致公司⽆法为您缴纳社会保险（即养⽼、医疗、失业、 ⼯伤、⽣育、⼤病保险）。请本⽉14号之前办理社保相关⼿续以保证公司能正常为您缴纳社保。 2 若因个⼈未到社保局机构办理相关社保⼿续（减少、转移等）⽽导致公司⽆法为您购买社保，公司将不 予补缴。在此期间造成的损失由本⼈⾃⾏承担。 本通知书⼀式两份，公司和员⼯各执⼀份。本通知书⾃签字之⽇起⽣效，涂改⽆效。 本⼈已收到《社保缴纳异常通知书》，知晓并接受通知书上所述内容。 员⼯签名： 时间：年⽉⽇ 2021年11⽉1⽇</p>
+<h5 id="案例十：关于护网行动2022安全补丁更新通知"><a href="#案例十：关于护网行动2022安全补丁更新通知" class="headerlink" title="案例十：关于护网行动2022安全补丁更新通知"></a>案例十：关于护网行动2022安全补丁更新通知</h5><p>为全⼒做好党⼆⼗⼤⽹络安全保障⼯作，公安部拟于7⽉26号启动“护⽹2022”⽹络安全攻防实战演 习，持续到8⽉初。我们公司也作为防守单位参与其中。 为了保障公司电脑终端安全，公司联系安全⼚商紧急制作出了针对护⽹⾏动的安全补丁，请全员对电 脑终端进⾏安装安全补丁，做好终端防护，防⽌个⼈pc终端遭受病毒攻击。 请各位务必安装补丁，本次演习级别⾼，责任重⼤ 依据公司部署，本次演习需要全员重视，将严格按照谁主管谁负责，谁运营谁负责来执⾏</p>
+<h5 id="案例十一：VPN证书过期重装"><a href="#案例十一：VPN证书过期重装" class="headerlink" title="案例十一：VPN证书过期重装"></a>案例十一：VPN证书过期重装</h5><p>尊敬的xxx： 您的vpn证书：f416cd055a647ff98fd439e726d431f，将于2021-05-xx 00:00:00正式到期,截⾄⽬前仅 剩x天。为了不影响您的正常使⽤，请您及时下载安装新的证书，证书⻅附件：</p>
+<h5 id="案例十二：安装监控软件"><a href="#案例十二：安装监控软件" class="headerlink" title="案例十二：安装监控软件"></a>案例十二：安装监控软件</h5><p>为了完善公司内部办公环境，提高公司内部办公效率和监控，请各位同事务必安装和升级XXX自查工具，如遇杀毒软件拦截，请关闭杀毒软件再次安装。日后会有上级检查小组进行检查，存在问题终端人员会纳入年底考核。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%9B%AE%E6%A0%87%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">一、目标信息收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%9B%AE%E6%A0%87%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">二、目标环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%A4%BE%E4%BA%A4"><span class="toc-number">3.</span> <span class="toc-text">三、社交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="toc-number">4.</span> <span class="toc-text">四、基础设施</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%82%AE%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">五、邮件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%92%93%E9%B1%BC%E8%AF%9D%E6%9C%AF%E6%A8%A1%E6%9D%BF"><span class="toc-number">6.</span> <span class="toc-text">六、钓鱼话术模板</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%80%EF%BC%9A%E4%BA%B2%E7%88%B1%E7%9A%84%E5%90%8C%E4%BA%8B%E4%BB%AC"><span class="toc-number">6.0.1.</span> <span class="toc-text">案例一：亲爱的同事们</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%8C%EF%BC%9A%E5%85%B3%E4%BA%8E2021%E5%B9%B4%E5%BA%A6%E7%BB%A9%E6%95%88%E7%BB%93%E7%AE%97%E4%B8%AA%E4%BA%BA%E6%89%80%E5%BE%97%E7%A8%8E%E7%A8%8E%E6%94%B6%E4%BC%98%E5%8C%96%E7%9A%84%E6%83%85%E5%86%B5%E9%80%9A%E6%8A%A5"><span class="toc-number">6.0.2.</span> <span class="toc-text">案例二：关于2021年度绩效结算个人所得税税收优化的情况通报</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%89%EF%BC%9A%E9%92%93%E9%B1%BC%E6%A1%88%E4%BE%8B%EF%BC%9AChrome%E6%BC%8F%E6%B4%9E%E4%B8%80%E9%94%AE%E4%BF%AE%E5%A4%8D"><span class="toc-number">6.0.3.</span> <span class="toc-text">案例三：钓鱼案例：Chrome漏洞一键修复</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%9B%9B%EF%BC%9A%E4%BB%A5%E5%81%87%E4%B9%B1%E7%9C%9F"><span class="toc-number">6.0.4.</span> <span class="toc-text">案例四：以假乱真</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%BA%94%EF%BC%9A%E9%A3%9F%E5%A0%82%E6%BB%A1%E6%84%8F%E5%BA%A6%E8%B0%83%E6%9F%A5"><span class="toc-number">6.0.5.</span> <span class="toc-text">案例五：食堂满意度调查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%85%AD%EF%BC%9A%E7%BB%A9%E6%95%88%E8%87%AA%E8%AF%84"><span class="toc-number">6.0.6.</span> <span class="toc-text">案例六：绩效自评</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B8%83%EF%BC%9A%E5%B7%A5%E8%A3%85%E5%B0%BA%E5%AF%B8%E6%89%8B%E6%9C%BA"><span class="toc-number">6.0.7.</span> <span class="toc-text">案例七：工装尺寸手机</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%85%AB%EF%BC%9A%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E6%8F%90%E7%A4%BA%E5%92%8C%E5%8A%9E%E5%85%AC%E7%94%B5%E8%84%91%E5%8A%A0%E5%9B%BA%E6%89%8B%E5%86%8C"><span class="toc-number">6.0.8.</span> <span class="toc-text">案例八：网络安全风险提示和办公电脑加固手册</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E4%B9%9D%EF%BC%9A%E7%A4%BE%E4%BF%9D%E7%BC%B4%E7%BA%B3%E5%BC%82%E5%B8%B8%E9%80%9A%E7%9F%A5%E4%B9%A6"><span class="toc-number">6.0.9.</span> <span class="toc-text">案例九：社保缴纳异常通知书</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%8D%81%EF%BC%9A%E5%85%B3%E4%BA%8E%E6%8A%A4%E7%BD%91%E8%A1%8C%E5%8A%A82022%E5%AE%89%E5%85%A8%E8%A1%A5%E4%B8%81%E6%9B%B4%E6%96%B0%E9%80%9A%E7%9F%A5"><span class="toc-number">6.0.10.</span> <span class="toc-text">案例十：关于护网行动2022安全补丁更新通知</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%8D%81%E4%B8%80%EF%BC%9AVPN%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E9%87%8D%E8%A3%85"><span class="toc-number">6.0.11.</span> <span class="toc-text">案例十一：VPN证书过期重装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%8D%81%E4%BA%8C%EF%BC%9A%E5%AE%89%E8%A3%85%E7%9B%91%E6%8E%A7%E8%BD%AF%E4%BB%B6"><span class="toc-number">6.0.12.</span> <span class="toc-text">案例十二：安装监控软件</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&text=钓鱼话术案例"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&is_video=false&description=钓鱼话术案例"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=钓鱼话术案例&body=Check out this article: https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&title=钓鱼话术案例"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&name=钓鱼话术案例&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/&t=钓鱼话术案例"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
